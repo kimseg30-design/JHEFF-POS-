@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  @media print {
+    /* Hide everything by default when printing */
+    body * {
+      visibility: hidden;
+    }
+    
+    /* Only show the element with id "printable-receipt" and its children */
+    #printable-receipt,
+    #printable-receipt * {
+      visibility: visible;
+    }
+    
+    /* Position the printable receipt at the top left */
+    #printable-receipt {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 80mm;
+      margin: 0;
+      padding: 0;
+      background: white;
+      box-shadow: none !important;
+      border: none !important;
+      visibility: visible !important;
+    }
+
+    /* Remove headers/footers from browser print */
+    @page {
+      size: 80mm auto;
+      margin: 0;
+    }
+
+    /* Ensure text is black and sharp */
+    #printable-receipt {
+      color: black !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* Hide any browser-added headers/footers */
+    header, footer, nav {
+      display: none !important;
+    }
+  }
+}
