@@ -29,6 +29,17 @@ export default function UtangPage() {
   const [recordType, setRecordType] = useState<'credit' | 'payment' | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
+  const deferredSearch = useDeferredValue(searchQuery);
+
+  const filteredCustomers = useMemo(() => {
+    const q = deferredSearch.toLowerCase().trim();
+    if (!q) return customers;
+    return customers.filter(c => 
+      c.name.toLowerCase().includes(q) ||
+      (c.contact && c.contact.includes(q))
+    );
+  }, [customers, deferredSearch]);
+
   useEffect(() => {
     if (!authLoading && isCashier) {
       router.push('/');
@@ -88,17 +99,6 @@ export default function UtangPage() {
       </div>
     );
   }
-
-  const deferredSearch = useDeferredValue(searchQuery);
-
-  const filteredCustomers = useMemo(() => {
-    const q = deferredSearch.toLowerCase().trim();
-    if (!q) return customers;
-    return customers.filter(c => 
-      c.name.toLowerCase().includes(q) ||
-      (c.contact && c.contact.includes(q))
-    );
-  }, [customers, deferredSearch]);
 
   const handleEdit = (customer: Customer) => {
     setEditingCustomer(customer);

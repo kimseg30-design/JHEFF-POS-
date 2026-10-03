@@ -24,6 +24,17 @@ export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
+  const deferredSearch = useDeferredValue(searchQuery);
+
+  const filteredProducts = useMemo(() => {
+    const q = deferredSearch.toLowerCase().trim();
+    if (!q) return products;
+    return products.filter(p => 
+      p.name.toLowerCase().includes(q) ||
+      p.category.toLowerCase().includes(q)
+    );
+  }, [products, deferredSearch]);
+
   if (!loadingBranches && !currentBranchId) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
@@ -49,17 +60,6 @@ export default function ProductsPage() {
       </div>
     );
   }
-
-  const deferredSearch = useDeferredValue(searchQuery);
-
-  const filteredProducts = useMemo(() => {
-    const q = deferredSearch.toLowerCase().trim();
-    if (!q) return products;
-    return products.filter(p => 
-      p.name.toLowerCase().includes(q) ||
-      p.category.toLowerCase().includes(q)
-    );
-  }, [products, deferredSearch]);
 
   const handleExport = async () => {
     const exportData = filteredProducts.map(p => ({
