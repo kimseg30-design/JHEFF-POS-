@@ -93,6 +93,11 @@ export function useCustomers(branchId?: string) {
     return history.sort((a, b) => b.timestamp - a.timestamp);
   };
 
+  const getAllCreditLogs = async () => {
+    const history = await customerService.getAllCreditEntries(branchId);
+    return history.sort((a, b) => b.timestamp - a.timestamp);
+  };
+
   return {
     customers,
     loading,
@@ -101,6 +106,7 @@ export function useCustomers(branchId?: string) {
     deleteCustomer,
     recordCredit,
     getCreditHistory,
+    getAllCreditLogs,
     refresh: fetchCustomers,
   };
 }

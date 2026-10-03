@@ -18,7 +18,8 @@ import {
   Download,
   Filter,
   ShieldAlert,
-  FileText
+  FileText,
+  Users
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -145,7 +146,28 @@ export default function ReportsPage() {
                 </Link>
                 <div>
                   <h2 className="text-4xl font-black text-gray-900 tracking-tighter leading-tight">Reports Dashboard</h2>
-                  <p className="text-lg text-gray-500 font-medium">Analyze your store performance and sales trends.</p>
+                  <p className="text-lg text-gray-500 font-medium">Analyze your store performance, credit collections, and sales trends.</p>
+                  <div className="flex flex-wrap items-center gap-2 mt-4">
+                    <Link 
+                      href="/reports/daily"
+                      className="px-4 py-2 bg-white hover:bg-gray-100 border border-gray-200 rounded-xl text-xs font-bold text-gray-700 transition-all shadow-xs"
+                    >
+                      Daily Summary
+                    </Link>
+                    <Link 
+                      href="/reports/sales-journal"
+                      className="px-4 py-2 bg-white hover:bg-gray-100 border border-gray-200 rounded-xl text-xs font-bold text-gray-700 transition-all shadow-xs"
+                    >
+                      Sales Journal
+                    </Link>
+                    <Link 
+                      href="/reports/credits"
+                      className="px-4 py-2 bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-xl text-xs font-bold text-purple-700 transition-all shadow-xs flex items-center gap-1.5"
+                    >
+                      <Users className="w-3.5 h-3.5 text-purple-600" />
+                      Credit & Utang Report
+                    </Link>
+                  </div>
                 </div>
               </div>
   
@@ -255,6 +277,14 @@ export default function ReportsPage() {
                 >
                   <FileText className="w-6 h-6" />
                   VIEW SALES JOURNAL
+                </Link>
+
+                <Link 
+                  href="/reports/credits"
+                  className="w-full mt-3 bg-purple-600 text-white font-black py-5 rounded-[2rem] flex items-center justify-center gap-3 hover:bg-purple-700 transition-all active:scale-95 relative z-10 shadow-lg shadow-purple-950/50"
+                >
+                  <Users className="w-6 h-6" />
+                  VIEW CREDIT REPORT
                 </Link>
               </div>
             </div>

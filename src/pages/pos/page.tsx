@@ -355,7 +355,7 @@ export default function POSPage() {
                         onClick={() => setDisplayLimit(prev => prev + 36)}
                         className="px-8 py-3.5 bg-white hover:bg-gray-100 border border-gray-200 rounded-2xl text-xs font-black uppercase tracking-widest text-gray-800 shadow-sm transition-all active:scale-95"
                       >
-                        Ipakita ang iba pa ({filteredProducts.length - displayLimit} pang aytem)
+                        Show more ({filteredProducts.length - displayLimit} more items)
                       </button>
                     </div>
                   )}

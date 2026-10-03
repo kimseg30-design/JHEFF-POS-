@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ea580c"/>
+      <stop offset="50%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#fb923c"/>
+    </linearGradient>
+    <linearGradient id="iconGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#fed7aa"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Background rounded rectangle -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)"/>
+
+  <!-- Store Canopy & Shopping Cart Emblem -->
+  <g filter="url(#shadow)" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Store Roof / Canopy -->
+    <path d="M96 200 L416 200 L392 136 C388 126 378 120 368 120 L144 120 C134 120 124 126 120 136 Z" fill="#ffffff" fill-opacity="0.95" stroke-width="8"/>
+    
+    <!-- Store stripes -->
+    <path d="M160 120 L160 200 M224 120 L224 200 M288 120 L288 200 M352 120 L352 200" stroke="#ea580c" stroke-width="8" stroke-linecap="butt"/>
+
+    <!-- Cash Register & Cart Base -->
+    <rect x="128" y="232" width="256" height="152" rx="24" fill="#ffffff" stroke-width="8"/>
+    
+    <!-- Screen display -->
+    <rect x="160" y="260" width="192" height="48" rx="12" fill="#0f172a" stroke="none"/>
+    <text x="256" y="292" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="900" fill="#22c55e" text-anchor="middle" letter-spacing="1">₱ 0.00 POS</text>
+
+    <!-- Keypad buttons -->
+    <circle cx="180" cy="344" r="10" fill="#f97316" stroke="none"/>
+    <circle cx="216" cy="344" r="10" fill="#f97316" stroke="none"/>
+    <circle cx="252" cy="344" r="10" fill="#f97316" stroke="none"/>
+    <rect x="288" y="334" width="64" height="20" rx="8" fill="#16a34a" stroke="none"/>
+
+    <!-- Receipt Slot -->
+    <path d="M216 232 L216 216 C216 212 220 208 224 208 L288 208 C292 208 296 212 296 216 L296 232" fill="#f8fafc" stroke-width="6"/>
+  </g>
+</svg>

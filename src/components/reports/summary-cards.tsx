@@ -66,7 +66,7 @@ export function SummaryCards({
       textColor: 'text-blue-900',
     },
     {
-      title: 'Total Utang',
+      title: 'Customer Credits',
       value: `₱${totalUtang.toLocaleString('en-PH', { minimumFractionDigits: 2 })}`,
       icon: Users,
       color: 'bg-red-600',

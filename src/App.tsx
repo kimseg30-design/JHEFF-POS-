@@ -3,6 +3,7 @@ import { RouterProvider, usePathname } from '@/lib/router-shim';
 import { AuthProvider } from '@/lib/contexts/auth-context';
 import { ReceiptProvider } from '@/lib/context/receipt-context';
 import { StoreProvider } from '@/lib/hooks/use-store';
+import { OfflineIndicator } from '@/components/pwa/offline-indicator';
 import { Loader2 } from 'lucide-react';
 
 // Lazy-loaded Pages for instant bundle delivery and minimal device memory usage
@@ -20,6 +21,7 @@ const Settings = lazy(() => import('@/pages/settings/page'));
 const Reports = lazy(() => import('@/pages/reports/page'));
 const ReportsDaily = lazy(() => import('@/pages/reports/daily/page'));
 const ReportsSalesJournal = lazy(() => import('@/pages/reports/sales-journal/page'));
+const ReportsCredits = lazy(() => import('@/pages/reports/credits/page'));
 const AdminAuditTrail = lazy(() => import('@/pages/admin/audit-trail/page'));
 const AdminUsers = lazy(() => import('@/pages/admin/users/page'));
 
@@ -64,6 +66,9 @@ function AppContent() {
       return <ReportsDaily />;
     case '/reports/sales-journal':
       return <ReportsSalesJournal />;
+    case '/reports/credits':
+    case '/reports/credit':
+      return <ReportsCredits />;
     case '/admin/audit-trail':
       return <AdminAuditTrail />;
     case '/admin/users':
@@ -82,6 +87,7 @@ export default function App() {
             <Suspense fallback={<PageLoader />}>
               <AppContent />
             </Suspense>
+            <OfflineIndicator />
           </ReceiptProvider>
         </AuthProvider>
       </StoreProvider>

@@ -9,6 +9,7 @@ import { BranchManagement } from '../branches/branch-management';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { pullSync, processQueue } from '@/lib/db/sync-queue';
+import { PWAInstallButton } from '@/components/pwa/pwa-install-button';
 
 export function Header({ ticketNumber }: { ticketNumber?: string }) {
   const { store } = useStore();
@@ -79,7 +80,10 @@ export function Header({ ticketNumber }: { ticketNumber?: string }) {
         </div>
       </motion.div>
       
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
+        {/* PWA Install Button */}
+        <PWAInstallButton variant="header" />
+
         {/* Firebase Sync Button */}
         <button
           onClick={handleSync}

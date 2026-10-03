@@ -7,7 +7,7 @@ import { Header } from '@/components/layout/header';
 import { CustomerForm } from '@/components/utang/customer-form';
 import { CreditHistory } from '@/components/utang/credit-history';
 import { RecordTransaction } from '@/components/utang/record-transaction';
-import { Plus, Search, User, Phone, ArrowLeft, History, ArrowUpRight, ArrowDownLeft, Trash2, Edit2, UserPlus, ShieldAlert, Loader2 } from 'lucide-react';
+import { Plus, Search, User, Phone, ArrowLeft, History, ArrowUpRight, ArrowDownLeft, Trash2, Edit2, UserPlus, ShieldAlert, Loader2, FileText } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
@@ -131,21 +131,30 @@ export default function UtangPage() {
                 <ArrowLeft className="w-6 h-6" />
               </Link>
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Utang & Credit Ledger</h2>
-                <p className="text-gray-500 font-medium">I-track ang mga utang, bayad, at cross-matched breakdown ng bawat transaksyon.</p>
+                <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Customer Credit Ledger</h2>
+                <p className="text-gray-500 font-medium">Track customer credit, payments, and cross-matched ledger breakdowns.</p>
               </div>
             </div>
   
-            <button
-              onClick={() => {
-                setEditingCustomer(null);
-                setIsFormOpen(true);
-              }}
-              className="bg-green-600 hover:bg-green-700 text-white font-bold px-6 py-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-green-200 transition-all active:scale-95"
-            >
-              <Plus className="w-5 h-5" />
-              Add New Customer
-            </button>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/reports/credits"
+                className="bg-white hover:bg-gray-50 border border-gray-200 text-gray-800 font-bold px-5 py-4 rounded-2xl flex items-center justify-center gap-2 shadow-xs transition-all active:scale-95"
+              >
+                <FileText className="w-5 h-5 text-purple-600" />
+                Credit Report
+              </Link>
+              <button
+                onClick={() => {
+                  setEditingCustomer(null);
+                  setIsFormOpen(true);
+                }}
+                className="bg-green-600 hover:bg-green-700 text-white font-bold px-6 py-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-green-200 transition-all active:scale-95"
+              >
+                <Plus className="w-5 h-5" />
+                Add New Customer
+              </button>
+            </div>
           </div>
   
           <div className="relative mb-8">
@@ -203,7 +212,7 @@ export default function UtangPage() {
                   </div>
   
                   <div className="bg-gray-50 rounded-2xl p-4 mb-6">
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Kasalukuyang Balanse</p>
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Current Balance</p>
                     <div className="flex items-baseline justify-between">
                       <p className={`text-2xl font-black ${customer.totalUtang > 0 ? 'text-red-600' : 'text-green-600'}`}>
                         ₱{customer.totalUtang.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
@@ -211,25 +220,25 @@ export default function UtangPage() {
                       <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                         customer.totalUtang > 0 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
                       }`}>
-                        {customer.totalUtang > 0 ? 'May Utang' : 'Walang Utang'}
+                        {customer.totalUtang > 0 ? 'Outstanding' : 'Settled'}
                       </span>
                     </div>
                   </div>
-  
+
                   <div className="grid grid-cols-3 gap-2">
                     <button
                       onClick={() => { setSelectedCustomer(customer); setRecordType('credit'); }}
                       className="flex flex-col items-center gap-1 p-3 bg-red-50 text-red-600 rounded-2xl hover:bg-red-100 transition-all active:scale-95"
                     >
                       <ArrowUpRight className="w-5 h-5" />
-                      <span className="text-[10px] font-bold uppercase">Utang</span>
+                      <span className="text-[10px] font-bold uppercase">Credit</span>
                     </button>
                     <button
                       onClick={() => { setSelectedCustomer(customer); setRecordType('payment'); }}
                       className="flex flex-col items-center gap-1 p-3 bg-green-50 text-green-600 rounded-2xl hover:bg-green-100 transition-all active:scale-95"
                     >
                       <ArrowDownLeft className="w-5 h-5" />
-                      <span className="text-[10px] font-bold uppercase">Bayad</span>
+                      <span className="text-[10px] font-bold uppercase">Payment</span>
                     </button>
                     <button
                       onClick={() => setHistoryCustomer(customer)}

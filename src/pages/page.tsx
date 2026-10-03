@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
 import { AuthGuard } from '@/components/auth/auth-guard';
+import { PWAInstallButton } from '@/components/pwa/pwa-install-button';
 
 interface BaseMenuItem {
   title: string;
@@ -122,8 +123,8 @@ export default function Home() {
       accentColor: 'text-red-600/70'
     },
     {
-      title: 'Utang System',
-      description: 'Track customer credit',
+      title: 'Credit & Receivables',
+      description: 'Customer credit & payment ledger',
       href: '/utang',
       icon: Users,
       color: 'bg-green-600',
@@ -167,6 +168,9 @@ export default function Home() {
         <Header />
         
         <div className="p-6 md:p-12 max-w-7xl mx-auto">
+          {/* PWA Install Banner (automatically hides if already installed) */}
+          <PWAInstallButton variant="banner" className="mb-8" />
+
           <AnimatePresence>
             {showSyncError && (
               <motion.div

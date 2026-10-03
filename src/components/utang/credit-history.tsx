@@ -126,7 +126,7 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
             <div>
               <h3 className="text-xl font-black text-gray-900 tracking-tight">{customer.name}</h3>
               <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">
-                Cross-Matched Ledger & Kasaysayan ng Utang
+                Cross-Matched Customer Ledger & Payment History
               </p>
             </div>
           </div>
@@ -137,7 +137,7 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
               title="Statement of Account"
             >
               <Printer className="w-3.5 h-3.5 text-gray-500" />
-              <span>Resibo / SOA</span>
+              <span>Statement / SOA</span>
             </button>
             <button 
               onClick={onClose} 
@@ -152,47 +152,47 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
         <div className="p-6 bg-gradient-to-r from-gray-50 via-white to-gray-50 border-b border-gray-100">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Kasalukuyang Balanse</p>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Current Balance</p>
               <p className={`text-2xl font-black ${customer.totalUtang > 0 ? 'text-red-600' : 'text-green-600'}`}>
                 ₱{customer.totalUtang.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
               </p>
               <p className="text-[10px] text-gray-400 mt-1 font-semibold">
-                {customer.totalUtang > 0 ? 'Kailangang Bayaran' : 'Walang Balanse / Fully Paid'}
+                {customer.totalUtang > 0 ? 'Outstanding Receivable' : 'Zero Balance / Fully Settled'}
               </p>
             </div>
 
             <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Kabuuang Nautang</p>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Total Credits Taken</p>
               <p className="text-2xl font-black text-gray-800">
                 ₱{crossMatchResult.summary.totalCredits.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
               </p>
               <p className="text-[10px] text-gray-400 mt-1 font-semibold">
-                {crossMatchResult.credits.length} kabuuang tala ng utang
+                {crossMatchResult.credits.length} total credit records
               </p>
             </div>
 
             <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Kabuuang Naibayad</p>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Total Payments Made</p>
               <p className="text-2xl font-black text-green-600">
                 ₱{crossMatchResult.summary.totalPayments.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
               </p>
               <p className="text-[10px] text-gray-400 mt-1 font-semibold">
-                {crossMatchResult.payments.length} beses nagbayad
+                {crossMatchResult.payments.length} payment records
               </p>
             </div>
 
             <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Katayuan ng Utang</p>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Credit Status</p>
               <div className="flex items-center gap-1.5 mt-1">
                 <span className="text-xs font-black text-green-700 bg-green-50 px-2 py-0.5 rounded-lg border border-green-200">
-                  {crossMatchResult.summary.totalSettledCredits} Bayad Na
+                  {crossMatchResult.summary.totalSettledCredits} Settled
                 </span>
                 <span className="text-xs font-black text-red-700 bg-red-50 px-2 py-0.5 rounded-lg border border-red-200">
-                  {crossMatchResult.summary.totalUnpaidCredits + crossMatchResult.summary.totalPartialCredits} May Utang
+                  {crossMatchResult.summary.totalUnpaidCredits + crossMatchResult.summary.totalPartialCredits} Open
                 </span>
               </div>
               <p className="text-[10px] text-gray-400 mt-1 font-semibold">
-                Pagtutugma (Cross-Match)
+                Cross-Match Verification
               </p>
             </div>
           </div>
@@ -225,7 +225,7 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
               }`}
             >
               <AlertCircle className="w-3.5 h-3.5 text-red-600" />
-              May Balanse Pa
+              Outstanding Balances
               {unpaidCredits.length > 0 && (
                 <span className="ml-1 px-1.5 py-0.2 text-[10px] rounded-full bg-red-100 text-red-700">
                   {unpaidCredits.length}
@@ -242,7 +242,7 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
               }`}
             >
               <ArrowDownLeft className="w-3.5 h-3.5 text-green-600" />
-              Mga Bayad (Breakdown)
+              Payments & Breakdown
               <span className="ml-1 px-1.5 py-0.2 text-[10px] rounded-full bg-green-100 text-green-700">
                 {crossMatchResult.payments.length}
               </span>
@@ -265,7 +265,7 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-3.5 h-3.5" />
             <input
               type="text"
-              placeholder="Maghanap ng petsa o aytem..."
+              placeholder="Search by date or item..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-9 pr-3 py-2 bg-gray-50 rounded-xl text-xs border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-gray-400"
@@ -278,13 +278,13 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20">
               <div className="animate-spin border-4 border-blue-200 border-t-blue-600 rounded-full w-10 h-10 mb-3" />
-              <p className="text-gray-500 text-xs font-medium">Kinakalkula ang cross-matched ledger...</p>
+              <p className="text-gray-500 text-xs font-medium">Calculating cross-matched ledger...</p>
             </div>
           ) : history.length === 0 ? (
             <div className="text-center py-20 bg-gray-50 rounded-3xl border border-dashed border-gray-200">
               <History className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-700 font-bold text-sm">Wala pang transaksyon ang kustomer na ito.</p>
-              <p className="text-gray-400 text-xs mt-1">Lahat ng utang at bayad ay lalabas dito kasama ang pagtutugma.</p>
+              <p className="text-gray-700 font-bold text-sm">No transactions found for this customer.</p>
+              <p className="text-gray-400 text-xs mt-1">Recorded credits and payments will appear here with automatic settlement matching.</p>
             </div>
           ) : (
             <>
@@ -292,7 +292,7 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
               {activeTab === 'cross_match' && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between text-xs text-gray-500 px-1">
-                    <span>Ipinapakita ang bawat utang at ang mga petsa/halaga ng bayad na inilapat dito:</span>
+                    <span>Showing each credit and the payment amounts applied to it:</span>
                     <button 
                       onClick={() => {
                         const allExpanded = filteredCredits.every(c => expandedCreditIds[c.id]);
@@ -302,13 +302,13 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
                       }}
                       className="text-blue-600 hover:text-blue-800 font-bold"
                     >
-                      {filteredCredits.every(c => expandedCreditIds[c.id]) ? 'Itiklop Lahat' : 'I-expand Lahat'}
+                      {filteredCredits.every(c => expandedCreditIds[c.id]) ? 'Collapse All' : 'Expand All'}
                     </button>
                   </div>
 
                   {filteredCredits.length === 0 ? (
                     <div className="text-center py-12 bg-gray-50 rounded-2xl text-xs text-gray-400">
-                      Walang tugmang utang sa iyong paghahanap.
+                      No matching credits found.
                     </div>
                   ) : (
                     filteredCredits.map((credit, index) => {
@@ -337,10 +337,10 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
                             <div className="flex items-start gap-3.5">
                               <div className={`p-2.5 rounded-2xl shrink-0 mt-0.5 ${
                                 credit.status === 'fully_paid' 
-                                  ? 'bg-green-100 text-green-700' 
-                                  : credit.status === 'partially_paid'
-                                  ? 'bg-amber-100 text-amber-700'
-                                  : 'bg-red-100 text-red-600'
+                                   ? 'bg-green-100 text-green-700' 
+                                   : credit.status === 'partially_paid'
+                                   ? 'bg-amber-100 text-amber-700'
+                                   : 'bg-red-100 text-red-600'
                               }`}>
                                 {credit.status === 'fully_paid' ? (
                                   <CheckCircle2 className="w-5 h-5" />
@@ -354,22 +354,22 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
                               <div>
                                 <div className="flex flex-wrap items-center gap-2">
                                   <span className="text-xs font-black text-gray-900">
-                                    🗓️ Petsa ng Utang: {formatShortDate(credit.timestamp)}
+                                    🗓️ Credit Date: {formatShortDate(credit.timestamp)}
                                   </span>
 
                                   {credit.status === 'fully_paid' && (
                                     <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-green-100 text-green-800 border border-green-200">
-                                      ✓ Bayad Na
+                                      ✓ Paid in Full
                                     </span>
                                   )}
                                   {credit.status === 'partially_paid' && (
                                     <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-100 text-amber-800 border border-amber-200">
-                                      Bahagyang Bayad ({percentPaid}%)
+                                      Partially Paid ({percentPaid}%)
                                     </span>
                                   )}
                                   {credit.status === 'unpaid' && (
                                     <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-red-100 text-red-800 border border-red-200">
-                                      Hindi Pa Bayad
+                                      Unpaid
                                     </span>
                                   )}
                                 </div>
@@ -382,7 +382,7 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
                                   <span>{formatDate(credit.timestamp)}</span>
                                   {credit.settledAt && credit.status === 'fully_paid' && (
                                     <span className="text-green-600 font-semibold">
-                                      • Ganap nang nabayaran noong: {formatShortDate(credit.settledAt)}
+                                      • Fully settled on: {formatShortDate(credit.settledAt)}
                                     </span>
                                   )}
                                 </div>
@@ -391,7 +391,7 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
 
                             <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border-t sm:border-t-0 pt-2 sm:pt-0 border-gray-100">
                               <div className="text-right">
-                                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">Halaga ng Utang</span>
+                                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">Original Credit</span>
                                 <span className="text-lg font-black text-gray-900">
                                   ₱{credit.originalAmount.toFixed(2)}
                                 </span>
@@ -400,11 +400,11 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
                               <div className="text-right sm:mt-1">
                                 {credit.status === 'fully_paid' ? (
                                   <span className="text-xs font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded-lg">
-                                    ₱0.00 Balanse
+                                    ₱0.00 Balance
                                   </span>
                                 ) : (
                                   <span className="text-xs font-black text-red-600 bg-red-50 px-2 py-0.5 rounded-lg border border-red-100">
-                                    Balanse: ₱{credit.remainingBalance.toFixed(2)}
+                                    Balance: ₱{credit.remainingBalance.toFixed(2)}
                                   </span>
                                 )}
                               </div>
@@ -431,16 +431,16 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
                               <div className="flex items-center justify-between text-xs font-bold text-gray-700">
                                 <span className="flex items-center gap-1.5">
                                   <Layers className="w-3.5 h-3.5 text-blue-600" />
-                                  Breakdown ng mga Bayad na Inilapat sa Utang na ito:
+                                  Breakdown of Payments Applied to this Credit:
                                 </span>
                                 <span className="text-gray-500">
-                                  Kabuuang Naibawas: ₱{credit.amountPaid.toFixed(2)} / ₱{credit.originalAmount.toFixed(2)}
+                                  Total Applied: ₱{credit.amountPaid.toFixed(2)} / ₱{credit.originalAmount.toFixed(2)}
                                 </span>
                               </div>
 
                               {credit.appliedPayments.length === 0 ? (
                                 <div className="p-3 bg-white rounded-xl border border-gray-200 text-xs text-gray-500 font-medium text-center">
-                                  Wala pang bayad na naitala para sa utang na ito. Ang buong ₱{credit.originalAmount.toFixed(2)} ay aktibong balanse.
+                                  No payments applied to this credit yet. Full ₱{credit.originalAmount.toFixed(2)} is outstanding balance.
                                 </div>
                               ) : (
                                 <div className="space-y-2">
@@ -455,15 +455,15 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
                                         </div>
                                         <div>
                                           <p className="font-bold text-gray-900">
-                                            Petsa ng Bayad: {formatDate(pmt.paymentTimestamp)}
+                                            Payment Date: {formatDate(pmt.paymentTimestamp)}
                                           </p>
                                           <p className="text-gray-500 text-[11px]">
-                                            Mula sa rekord: &ldquo;{pmt.paymentDescription}&rdquo;
+                                            From record: &ldquo;{pmt.paymentDescription}&rdquo;
                                           </p>
                                         </div>
                                       </div>
                                       <div className="text-right">
-                                        <span className="text-[10px] text-gray-400 font-bold block uppercase">Ibinawas</span>
+                                        <span className="text-[10px] text-gray-400 font-bold block uppercase">Applied</span>
                                         <span className="font-black text-green-700 text-sm">
                                           -₱{pmt.amountApplied.toFixed(2)}
                                         </span>
@@ -475,7 +475,7 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
 
                               {credit.remainingBalance > 0.001 && (
                                 <div className="flex items-center justify-between text-xs pt-1 px-1 font-bold text-red-600">
-                                  <span>Natitirang Utang para sa petsang ito:</span>
+                                  <span>Remaining Balance for this credit:</span>
                                   <span>₱{credit.remainingBalance.toFixed(2)}</span>
                                 </div>
                               )}
@@ -492,12 +492,12 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
               {activeTab === 'payments' && (
                 <div className="space-y-4">
                   <p className="text-xs text-gray-500 px-1">
-                    Bawat bayad ng kustomer at ang listahan ng mga petsa at utang na nabayaran o nabawasan nito:
+                    Customer payments and the list of credits covered or reduced:
                   </p>
 
                   {filteredPayments.length === 0 ? (
                     <div className="text-center py-12 bg-gray-50 rounded-2xl text-xs text-gray-400">
-                      Walang naitalang bayad para sa kustomer na ito.
+                      No payments recorded for this customer.
                     </div>
                   ) : (
                     filteredPayments.map((pmt, index) => (
@@ -516,10 +516,10 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
                             <div>
                               <div className="flex items-center gap-2">
                                 <span className="text-xs font-black text-gray-900">
-                                  🗓️ Petsa ng Bayad: {formatDate(pmt.timestamp)}
+                                  🗓️ Payment Date: {formatDate(pmt.timestamp)}
                                 </span>
                                 <span className="bg-green-100 text-green-800 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">
-                                  Bayad
+                                  Payment
                                 </span>
                               </div>
                               <p className="text-sm font-bold text-gray-800 mt-0.5">{pmt.description}</p>
@@ -527,7 +527,7 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
                           </div>
 
                           <div className="text-right">
-                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">Halaga ng Bayad</span>
+                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">Payment Amount</span>
                             <span className="text-xl font-black text-green-600">
                               -₱{pmt.paymentAmount.toFixed(2)}
                             </span>
@@ -538,12 +538,12 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
                         <div className="bg-gray-50 rounded-xl p-3.5 space-y-2 border border-gray-100">
                           <p className="text-xs font-bold text-gray-700 flex items-center gap-1.5">
                             <Layers className="w-3.5 h-3.5 text-blue-600" />
-                            Mga Utang na Nabayaran / Nabawasan ng Bayad na ito:
+                            Credits Covered / Reduced by this Payment:
                           </p>
 
                           {pmt.coveredCredits.length === 0 ? (
                             <p className="text-xs text-gray-400 italic">
-                              Walang aktibong utang na inilapat (advance payment / sobra).
+                              No open credits covered (advance deposit / excess payment).
                             </p>
                           ) : (
                             <div className="space-y-1.5">
@@ -554,27 +554,27 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
                                 >
                                   <div>
                                     <span className="font-bold text-gray-900">
-                                      🗓️ Utang noong {formatShortDate(cov.creditTimestamp)}:
+                                      🗓️ Credit on {formatShortDate(cov.creditTimestamp)}:
                                     </span>
                                     <span className="text-gray-600 ml-1">
                                       {cov.creditDescription}
                                     </span>
                                     <span className="text-gray-400 text-[10px] ml-1.5">
-                                      (Kabuuang utang: ₱{cov.originalCreditAmount.toFixed(2)})
+                                      (Total credit: ₱{cov.originalCreditAmount.toFixed(2)})
                                     </span>
                                   </div>
 
                                   <div className="text-right flex items-center gap-2">
                                     <span className="font-black text-green-700">
-                                      Nabawas: ₱{cov.amountCovered.toFixed(2)}
+                                      Covered: ₱{cov.amountCovered.toFixed(2)}
                                     </span>
                                     {cov.isFullySettledByThis ? (
                                       <span className="text-[10px] font-bold bg-green-100 text-green-800 px-1.5 py-0.5 rounded">
-                                        ✓ Bayad Na
+                                        ✓ Paid in Full
                                       </span>
                                     ) : (
                                       <span className="text-[10px] font-bold bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded">
-                                        May Balanseng ₱{cov.creditRemainingAfter.toFixed(2)}
+                                        Remaining: ₱{cov.creditRemainingAfter.toFixed(2)}
                                       </span>
                                     )}
                                   </div>
@@ -585,7 +585,7 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
 
                           {pmt.unallocatedAmount > 0.001 && (
                             <div className="text-xs text-blue-700 font-bold bg-blue-50 p-2 rounded-lg border border-blue-100 flex items-center justify-between">
-                              <span>ℹ️ Sobrang Bayad / Advance Deposit:</span>
+                              <span>ℹ️ Excess Payment / Advance Deposit:</span>
                               <span>₱{pmt.unallocatedAmount.toFixed(2)}</span>
                             </div>
                           )}
@@ -602,10 +602,10 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
                   <div className="p-4 bg-red-50/70 border border-red-200 rounded-2xl flex items-center justify-between">
                     <div>
                       <h4 className="text-xs font-black text-red-900 uppercase tracking-wider">
-                        Listahan ng mga May Utang Pa (Outstanding Balances)
+                        Outstanding Credit Balances
                       </h4>
                       <p className="text-xs text-red-700 mt-0.5">
-                        Ipinapakita kung anong mga partikular na petsa at aytem ang hindi pa ganap na nababayaran.
+                        Shows specific dates and items with remaining unpaid balances.
                       </p>
                     </div>
                     <div className="text-right">
@@ -618,8 +618,8 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
                   {unpaidCredits.length === 0 ? (
                     <div className="text-center py-16 bg-green-50 rounded-2xl border border-green-200">
                       <CheckCircle2 className="w-12 h-12 text-green-600 mx-auto mb-2" />
-                      <h4 className="text-base font-bold text-green-900">Walang Aktibong Utang!</h4>
-                      <p className="text-xs text-green-700 mt-1">Lahat ng nakaraang utang ay ganap nang nabayaran.</p>
+                      <h4 className="text-base font-bold text-green-900">No Active Credits!</h4>
+                      <p className="text-xs text-green-700 mt-1">All previous credits have been fully paid.</p>
                     </div>
                   ) : (
                     unpaidCredits.map((credit, index) => (
@@ -634,22 +634,22 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
                           <div>
                             <div className="flex items-center gap-2">
                               <span className="text-xs font-black text-gray-900">
-                                🗓️ Petsa: {formatDate(credit.timestamp)}
+                                🗓️ Date: {formatDate(credit.timestamp)}
                               </span>
                               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-700">
-                                {credit.status === 'partially_paid' ? 'May Bahagyang Bayad' : 'Walang Bayad Pa'}
+                                {credit.status === 'partially_paid' ? 'Partially Paid' : 'Unpaid'}
                               </span>
                             </div>
                             <p className="text-sm font-bold text-gray-800 mt-1">{credit.description}</p>
                             <div className="text-xs text-gray-400 mt-1 flex items-center gap-3">
-                              <span>Orihinal na Utang: ₱{credit.originalAmount.toFixed(2)}</span>
-                              <span>• Naibayad na: ₱{credit.amountPaid.toFixed(2)}</span>
+                              <span>Original Credit: ₱{credit.originalAmount.toFixed(2)}</span>
+                              <span>• Paid: ₱{credit.amountPaid.toFixed(2)}</span>
                             </div>
                           </div>
                         </div>
 
                         <div className="text-right shrink-0">
-                          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">Natitirang Balanse</span>
+                          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">Remaining Balance</span>
                           <span className="text-lg font-black text-red-600">
                             ₱{credit.remainingBalance.toFixed(2)}
                           </span>
@@ -664,7 +664,7 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
               {activeTab === 'all' && (
                 <div className="space-y-3">
                   <p className="text-xs text-gray-500 px-1">
-                    Buong timeline ng lahat ng transaksyon (utang at bayad) ayon sa petsa:
+                    Complete chronological timeline of all transactions (credits and payments):
                   </p>
 
                   {chronologicalEntries.map((entry, index) => {
@@ -693,15 +693,15 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
                                     : 'bg-red-100 text-red-700'
                                 }`}>
                                   {matchedCredit.status === 'fully_paid' 
-                                    ? '✓ Bayad Na' 
+                                    ? '✓ Paid in Full' 
                                     : matchedCredit.status === 'partially_paid'
-                                    ? `Balanse: ₱${matchedCredit.remainingBalance.toFixed(2)}`
-                                    : 'Hindi Pa Bayad'}
+                                    ? `Balance: ₱${matchedCredit.remainingBalance.toFixed(2)}`
+                                    : 'Unpaid'}
                                 </span>
                               )}
                               {matchedPayment && (
                                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">
-                                  Inilapat sa {matchedPayment.coveredCredits.length} utang
+                                  Applied to {matchedPayment.coveredCredits.length} credit(s)
                                 </span>
                               )}
                             </div>
@@ -727,12 +727,12 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
         {/* Footer */}
         <div className="p-6 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
           <div className="text-xs text-gray-500">
-            <span className="font-bold text-gray-800">{crossMatchResult.credits.length}</span> Utang •{' '}
-            <span className="font-bold text-gray-800">{crossMatchResult.payments.length}</span> Bayad
+            <span className="font-bold text-gray-800">{crossMatchResult.credits.length}</span> Credits •{' '}
+            <span className="font-bold text-gray-800">{crossMatchResult.payments.length}</span> Payments
           </div>
           <div className="flex items-center gap-4">
             <div className="text-right">
-              <span className="text-gray-400 font-bold uppercase tracking-widest text-[10px] block">Kasalukuyang Balanse</span>
+              <span className="text-gray-400 font-bold uppercase tracking-widest text-[10px] block">Current Balance</span>
               <span className={`text-2xl font-black ${customer.totalUtang > 0 ? 'text-red-600' : 'text-green-600'}`}>
                 ₱{customer.totalUtang.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
               </span>
@@ -741,7 +741,7 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
               onClick={onClose}
               className="px-6 py-2.5 bg-gray-900 text-white rounded-xl text-xs font-bold hover:bg-black transition-colors"
             >
-              Isara (Close)
+              Close
             </button>
           </div>
         </div>
@@ -760,7 +760,7 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
               <div className="flex items-center justify-between border-b pb-4 mb-6 print:hidden">
                 <div className="flex items-center gap-2">
                   <Receipt className="w-5 h-5 text-gray-700" />
-                  <h3 className="text-lg font-bold text-gray-900">Statement of Account (Resibo ng Utang at Bayad)</h3>
+                  <h3 className="text-lg font-bold text-gray-900">Statement of Account (Credit & Payment History)</h3>
                 </div>
                 <div className="flex items-center gap-2">
                   <button
@@ -768,7 +768,7 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
                     className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm"
                   >
                     <Printer className="w-4 h-4" />
-                    I-print
+                    Print
                   </button>
                   <button
                     onClick={() => setShowPrintModal(false)}
@@ -783,25 +783,25 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
               <div className="space-y-6 text-gray-900 font-sans">
                 <div className="text-center border-b pb-4">
                   <h2 className="text-2xl font-black uppercase tracking-tight">Statement of Account</h2>
-                  <p className="text-xs text-gray-500 mt-1">Cross-Matched Customer Ledger & Payment Breakdown</p>
-                  <p className="text-xs text-gray-400 mt-0.5">Petsa: {new Date().toLocaleDateString('en-PH', { dateStyle: 'full' })}</p>
+                  <p className="text-xs text-gray-500 mt-1">Cross-Matched Customer Credit Ledger & Payment Breakdown</p>
+                  <p className="text-xs text-gray-400 mt-0.5">Date: {new Date().toLocaleDateString('en-PH', { dateStyle: 'full' })}</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 text-xs bg-gray-50 p-4 rounded-xl">
                   <div>
-                    <span className="text-gray-400 font-bold uppercase block text-[10px]">Pangalan ng Kustomer</span>
+                    <span className="text-gray-400 font-bold uppercase block text-[10px]">Customer Name</span>
                     <span className="text-sm font-black">{customer.name}</span>
                   </div>
                   <div>
                     <span className="text-gray-400 font-bold uppercase block text-[10px]">Contact Info</span>
-                    <span className="text-sm font-bold">{customer.contact || 'Walang Contact'}</span>
+                    <span className="text-sm font-bold">{customer.contact || 'No Contact Provided'}</span>
                   </div>
                   <div>
-                    <span className="text-gray-400 font-bold uppercase block text-[10px]">Kabuuang Naitalang Utang</span>
+                    <span className="text-gray-400 font-bold uppercase block text-[10px]">Total Credits Issued</span>
                     <span className="font-bold text-gray-800">₱{crossMatchResult.summary.totalCredits.toFixed(2)}</span>
                   </div>
                   <div>
-                    <span className="text-gray-400 font-bold uppercase block text-[10px]">Kabuuang Naibayad</span>
+                    <span className="text-gray-400 font-bold uppercase block text-[10px]">Total Payments Received</span>
                     <span className="font-bold text-green-700">₱{crossMatchResult.summary.totalPayments.toFixed(2)}</span>
                   </div>
                 </div>
@@ -809,17 +809,17 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
                 {/* Table of Debts & Settlements */}
                 <div>
                   <h4 className="text-xs font-black uppercase tracking-wider text-gray-600 mb-2">
-                    Detalyadong Talaan ng bawat Utang at Katayuan ng Bayad:
+                    Detailed Credit Records & Settlement Status:
                   </h4>
                   <table className="w-full text-xs text-left border-collapse">
                     <thead>
                       <tr className="border-b-2 border-gray-900 bg-gray-100">
-                        <th className="py-2 px-2 font-black">Petsa ng Utang</th>
-                        <th className="py-2 px-2 font-black">Aytem / Deskripsyon</th>
-                        <th className="py-2 px-2 font-black text-right">Halaga</th>
-                        <th className="py-2 px-2 font-black text-right">Naibayad</th>
-                        <th className="py-2 px-2 font-black text-right">Natitirang Balanse</th>
-                        <th className="py-2 px-2 font-black text-center">Katayuan</th>
+                        <th className="py-2 px-2 font-black">Credit Date</th>
+                        <th className="py-2 px-2 font-black">Items / Description</th>
+                        <th className="py-2 px-2 font-black text-right">Credit Amount</th>
+                        <th className="py-2 px-2 font-black text-right">Amount Paid</th>
+                        <th className="py-2 px-2 font-black text-right">Remaining Balance</th>
+                        <th className="py-2 px-2 font-black text-center">Status</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
@@ -830,7 +830,7 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
                             <span className="font-bold block">{c.description}</span>
                             {c.appliedPayments.length > 0 && (
                               <span className="text-[10px] text-gray-500 block">
-                                Inilapat: {c.appliedPayments.map(p => `₱${p.amountApplied.toFixed(2)} noong ${formatShortDate(p.paymentTimestamp)}`).join(', ')}
+                                Applied: {c.appliedPayments.map(p => `₱${p.amountApplied.toFixed(2)} on ${formatShortDate(p.paymentTimestamp)}`).join(', ')}
                               </span>
                             )}
                           </td>
@@ -845,7 +845,7 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
                                 ? 'bg-amber-100 text-amber-800'
                                 : 'bg-red-100 text-red-800'
                             }`}>
-                              {c.status === 'fully_paid' ? 'BAYAD NA' : c.status === 'partially_paid' ? 'BAHAGYA' : 'HINDI BAYAD'}
+                              {c.status === 'fully_paid' ? 'PAID IN FULL' : c.status === 'partially_paid' ? 'PARTIAL' : 'UNPAID'}
                             </span>
                           </td>
                         </tr>
@@ -857,10 +857,10 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
                 {/* Final Total Box */}
                 <div className="border-t-2 border-gray-900 pt-4 flex justify-between items-center">
                   <div>
-                    <p className="text-xs text-gray-500">Ang rekord na ito ay opisyal na halaw sa tindahan ledger.</p>
+                    <p className="text-xs text-gray-500">This statement is an official certified record from the store credit ledger.</p>
                   </div>
                   <div className="text-right">
-                    <span className="text-xs font-bold uppercase text-gray-500 block">Kasalukuyang Kabuuang Balanse:</span>
+                    <span className="text-xs font-bold uppercase text-gray-500 block">Current Total Balance:</span>
                     <span className="text-2xl font-black text-red-600">
                       ₱{customer.totalUtang.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
                     </span>
@@ -870,11 +870,11 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
                 <div className="pt-8 grid grid-cols-2 gap-8 text-center text-xs">
                   <div className="border-t border-gray-400 pt-2">
                     <p className="font-bold">{customer.name}</p>
-                    <p className="text-gray-400 text-[10px]">Lagda ng Kustomer</p>
+                    <p className="text-gray-400 text-[10px]">Customer Signature</p>
                   </div>
                   <div className="border-t border-gray-400 pt-2">
-                    <p className="font-bold">Tindera / Cashier</p>
-                    <p className="text-gray-400 text-[10px]">Lagda ng Awtorisadong Kinatawan</p>
+                    <p className="font-bold">Store Cashier / Manager</p>
+                    <p className="text-gray-400 text-[10px]">Authorized Signature</p>
                   </div>
                 </div>
               </div>

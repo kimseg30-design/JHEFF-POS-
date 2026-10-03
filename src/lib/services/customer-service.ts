@@ -18,6 +18,11 @@ class CustomerService extends BaseService<Customer> {
     return all.filter(e => e.customerId === customerId && !e.isDeleted);
   }
 
+  async getAllCreditEntries(branchId?: string): Promise<CreditEntry[]> {
+    const all = await dbUtil.getItems<CreditEntry>(STORES.CREDIT_LOG);
+    return all.filter(e => (!branchId || e.branchId === branchId) && !e.isDeleted);
+  }
+
   async recordCredit(entry: Omit<CreditEntry, 'updatedAt' | 'isDeleted'>): Promise<void> {
     const now = Date.now();
     const newEntry = {

@@ -64,7 +64,7 @@ export function RecordTransaction({ customer, type, onSave, onClose }: RecordTra
   const handleSelectFullBalance = () => {
     setSelectedTargetCreditId(null);
     setAmount(customer.totalUtang.toString());
-    setDescription('Buong Bayad sa Utang (Full Payment)');
+    setDescription('Full Balance Settlement');
   };
 
   const handleSelectCreditToPay = (credit: MatchedCredit) => {
@@ -76,7 +76,7 @@ export function RecordTransaction({ customer, type, onSave, onClose }: RecordTra
       setSelectedTargetCreditId(credit.id);
       setAmount(credit.remainingBalance.toFixed(2));
       const dateStr = new Date(credit.timestamp).toLocaleDateString('en-PH', { month: 'short', day: 'numeric' });
-      setDescription(`Bayad para sa utang noong ${dateStr} (${credit.description})`);
+      setDescription(`Payment for credit on ${dateStr} (${credit.description})`);
     }
   };
 
@@ -85,12 +85,12 @@ export function RecordTransaction({ customer, type, onSave, onClose }: RecordTra
     setError(null);
 
     if (!amount || parseFloat(amount) <= 0) {
-      setError('Mangyaring maglagay ng wastong halaga na higit sa 0.');
+      setError('Please enter a valid amount greater than 0.');
       return;
     }
 
     if (!description.trim()) {
-      setError('Mangyaring maglagay ng deskripsyon ng transaksyon.');
+      setError('Please enter a transaction description.');
       return;
     }
 
@@ -108,7 +108,7 @@ export function RecordTransaction({ customer, type, onSave, onClose }: RecordTra
       onClose();
     } catch (err) {
       console.error('Record failed:', err);
-      setError('Nabigong i-save ang transaksyon. Pakisubukan muli.');
+      setError('Failed to save transaction. Please try again.');
     } finally {
       setIsSaving(false);
     }
@@ -129,10 +129,10 @@ export function RecordTransaction({ customer, type, onSave, onClose }: RecordTra
             </div>
             <div>
               <h3 className="text-lg font-bold text-gray-900">
-                {type === 'credit' ? 'Magtala ng Utang (Record Utang)' : 'Magtala ng Bayad (Record Payment)'}
+                {type === 'credit' ? 'Record Customer Credit' : 'Record Payment'}
               </h3>
               <p className="text-xs font-semibold text-gray-400">
-                Para kay: <span className="text-gray-700 font-bold">{customer.name}</span>
+                Customer: <span className="text-gray-700 font-bold">{customer.name}</span>
               </p>
             </div>
           </div>
@@ -157,7 +157,7 @@ export function RecordTransaction({ customer, type, onSave, onClose }: RecordTra
           {/* Current balance card */}
           <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100 flex items-center justify-between">
             <div>
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Kasalukuyang Balanse ng Utang</p>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Current Outstanding Credit</p>
               <p className={`text-2xl font-black ${customer.totalUtang > 0 ? 'text-red-600' : 'text-green-600'}`}>
                 ₱{customer.totalUtang.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
               </p>
@@ -169,7 +169,7 @@ export function RecordTransaction({ customer, type, onSave, onClose }: RecordTra
                 className="px-3.5 py-2 bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5"
               >
                 <Sparkles className="w-3.5 h-3.5" />
-                Bayaran Lahat
+                Settle All
               </button>
             )}
           </div>
@@ -178,7 +178,7 @@ export function RecordTransaction({ customer, type, onSave, onClose }: RecordTra
           <form id="record-form" onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                <Coins className="w-3.5 h-3.5 text-gray-400" /> Halaga (₱ Amount)
+                <Coins className="w-3.5 h-3.5 text-gray-400" /> Amount (₱)
               </label>
               <input
                 type="number"
@@ -194,14 +194,14 @@ export function RecordTransaction({ customer, type, onSave, onClose }: RecordTra
 
             <div>
               <label className="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                <FileText className="w-3.5 h-3.5 text-gray-400" /> Deskripsyon (Description / Items)
+                <FileText className="w-3.5 h-3.5 text-gray-400" /> Description (Items / Notes)
               </label>
               <input
                 type="text"
                 required
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder={type === 'credit' ? 'Hal. 2kg Bigas, Mantika, Asukal' : 'Hal. Bahagyang bayad / Buong bayad'}
+                placeholder={type === 'credit' ? 'e.g. 2kg Rice, Cooking Oil, Sugar' : 'e.g. Partial cash payment / Full settlement'}
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all"
               />
             </div>
@@ -213,26 +213,26 @@ export function RecordTransaction({ customer, type, onSave, onClose }: RecordTra
                   <div className="flex items-center gap-2">
                     <Layers className="w-4 h-4 text-blue-600" />
                     <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider">
-                      Cross-Matching sa mga Hindi Pa Bayad na Utang
+                      Cross-Matching with Outstanding Credits
                     </h4>
                   </div>
                   <span className="text-[11px] text-gray-400 font-medium">
-                    {unpaidCredits.length} aktibong utang
+                    {unpaidCredits.length} active credits
                   </span>
                 </div>
 
                 {loadingCredits ? (
                   <div className="text-center py-4 text-xs text-gray-400 font-medium">
-                    Kinakalkula ang mga utang...
+                    Calculating credits...
                   </div>
                 ) : unpaidCredits.length === 0 ? (
                   <div className="p-4 bg-green-50 rounded-xl text-center text-xs font-bold text-green-700">
-                    Walang aktibong utang ang kustomer na ito. Ang ibabayad ay magsisilbing advance deposit / credit.
+                    No outstanding credit for this customer. Any payment recorded will be stored as an advance deposit/credit.
                   </div>
                 ) : (
                   <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
                     <p className="text-[11px] text-gray-500">
-                      Pumili ng partikular na utang na nais bayaran, o hayaang awtomatikong i-cross match mula sa pinakaluma (FIFO):
+                      Select a specific credit to settle, or allow automatic chronological FIFO matching:
                     </p>
                     {unpaidCredits.map(credit => {
                       const isSelected = selectedTargetCreditId === credit.id;
@@ -258,22 +258,22 @@ export function RecordTransaction({ customer, type, onSave, onClose }: RecordTra
                               <span className="text-xs font-bold text-gray-800">{dateStr}</span>
                               {credit.status === 'partially_paid' && (
                                 <span className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-bold">
-                                  Bahagyang Bayad
+                                  Partially Paid
                                 </span>
                               )}
                             </div>
                             <p className="text-xs text-gray-600 truncate mt-0.5">{credit.description}</p>
                             <p className="text-[11px] text-gray-400 mt-0.5">
-                              Kabuuang Utang: ₱{credit.originalAmount.toFixed(2)}
+                              Original Credit: ₱{credit.originalAmount.toFixed(2)}
                             </p>
                           </div>
                           <div className="text-right shrink-0">
-                            <span className="text-[10px] font-bold text-gray-400 block uppercase">Balanse</span>
+                            <span className="text-[10px] font-bold text-gray-400 block uppercase">Balance</span>
                             <span className="text-sm font-black text-red-600">
                               ₱{credit.remainingBalance.toFixed(2)}
                             </span>
                             <span className="text-[10px] font-bold text-blue-600 block mt-0.5">
-                              {isSelected ? '✓ Napili' : 'I-click para bayaran'}
+                              {isSelected ? '✓ Selected' : 'Click to settle'}
                             </span>
                           </div>
                         </div>
@@ -288,9 +288,9 @@ export function RecordTransaction({ customer, type, onSave, onClose }: RecordTra
                     <div className="flex items-center justify-between text-xs font-bold text-emerald-900">
                       <span className="flex items-center gap-1.5">
                         <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                        Preview ng Cross-Match Breakdown:
+                        Cross-Match Settlement Preview:
                       </span>
-                      <span>Kabuuang Maibabawas: ₱{paymentPreview.totalCovered.toFixed(2)}</span>
+                      <span>Total Covered: ₱{paymentPreview.totalCovered.toFixed(2)}</span>
                     </div>
 
                     <div className="space-y-1.5 pt-1 border-t border-emerald-200/60">
@@ -314,11 +314,11 @@ export function RecordTransaction({ customer, type, onSave, onClose }: RecordTra
                               </span>
                               {impact.willBeFullySettled ? (
                                 <span className="ml-2 text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded font-bold">
-                                  Bayad Na!
+                                  Paid in Full!
                                 </span>
                               ) : (
                                 <span className="ml-2 text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-bold">
-                                  Matitira: ₱{impact.remainingAfter.toFixed(2)}
+                                  Remaining: ₱{impact.remainingAfter.toFixed(2)}
                                 </span>
                               )}
                             </div>
@@ -328,7 +328,7 @@ export function RecordTransaction({ customer, type, onSave, onClose }: RecordTra
 
                       {paymentPreview.unallocated > 0.001 && (
                         <div className="text-[11px] text-blue-700 font-semibold pt-1">
-                          ℹ️ May sobrang ₱{paymentPreview.unallocated.toFixed(2)} na maitatala bilang advance deposit.
+                          ℹ️ Excess of ₱{paymentPreview.unallocated.toFixed(2)} will be recorded as advance deposit.
                         </div>
                       )}
                     </div>
@@ -346,7 +346,7 @@ export function RecordTransaction({ customer, type, onSave, onClose }: RecordTra
             onClick={onClose}
             className="flex-1 px-5 py-3.5 rounded-xl font-bold text-gray-600 hover:bg-gray-200/80 transition-all text-sm"
           >
-            Kanselahin (Cancel)
+            Cancel
           </button>
           <button
             form="record-form"
@@ -363,7 +363,7 @@ export function RecordTransaction({ customer, type, onSave, onClose }: RecordTra
             ) : (
               <>
                 <Save className="w-4 h-4" />
-                {type === 'credit' ? 'I-save ang Utang' : 'I-save ang Bayad'}
+                {type === 'credit' ? 'Save Credit' : 'Save Payment'}
               </>
             )}
           </button>
