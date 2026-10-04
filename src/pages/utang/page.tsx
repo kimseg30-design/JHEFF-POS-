@@ -7,7 +7,7 @@ import { Header } from '@/components/layout/header';
 import { CustomerForm } from '@/components/utang/customer-form';
 import { CreditHistory } from '@/components/utang/credit-history';
 import { RecordTransaction } from '@/components/utang/record-transaction';
-import { Plus, Search, User, Phone, ArrowLeft, History, ArrowUpRight, ArrowDownLeft, Trash2, Edit2, UserPlus, ShieldAlert, Loader2, FileText } from 'lucide-react';
+import { Plus, Search, User, Phone, ArrowLeft, History, ArrowUpRight, ArrowDownLeft, Trash2, Edit2, UserPlus, ShieldAlert, Loader2, FileText, CheckCircle2, Wallet, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
@@ -22,6 +22,7 @@ export default function UtangPage() {
   const { isCashier, loading: authLoading } = useAuth();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
+  const [balanceFilter, setBalanceFilter] = useState<'all' | 'outstanding' | 'fully_paid'>('all');
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
@@ -31,14 +32,37 @@ export default function UtangPage() {
 
   const deferredSearch = useDeferredValue(searchQuery);
 
+  const { totalReceivables, debtorsCount, fullyPaidCount } = useMemo(() => {
+    let sum = 0;
+    let debtors = 0;
+    let paid = 0;
+    for (const c of customers) {
+      if (c.totalUtang > 0.001) {
+        sum += c.totalUtang;
+        debtors++;
+      } else {
+        paid++;
+      }
+    }
+    return { totalReceivables: sum, debtorsCount: debtors, fullyPaidCount: paid };
+  }, [customers]);
+
   const filteredCustomers = useMemo(() => {
     const q = deferredSearch.toLowerCase().trim();
-    if (!q) return customers;
-    return customers.filter(c => 
+    let result = customers;
+
+    if (balanceFilter === 'outstanding') {
+      result = result.filter(c => c.totalUtang > 0.001);
+    } else if (balanceFilter === 'fully_paid') {
+      result = result.filter(c => c.totalUtang <= 0.001);
+    }
+
+    if (!q) return result;
+    return result.filter(c => 
       c.name.toLowerCase().includes(q) ||
       (c.contact && c.contact.includes(q))
     );
-  }, [customers, deferredSearch]);
+  }, [customers, deferredSearch, balanceFilter]);
 
   useEffect(() => {
     if (!authLoading && isCashier) {
@@ -157,15 +181,126 @@ export default function UtangPage() {
             </div>
           </div>
   
-          <div className="relative mb-8">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              type="text"
-              placeholder="Search customers by name..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 bg-white rounded-2xl border border-gray-100 shadow-sm focus:ring-2 focus:ring-green-500 outline-none transition-all"
-            />
+          {/* KPI Summary Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            <div 
+              onClick={() => setBalanceFilter('outstanding')}
+              className={`p-5 rounded-3xl border transition-all cursor-pointer ${
+                balanceFilter === 'outstanding' 
+                  ? 'bg-red-50 border-red-200 ring-2 ring-red-400' 
+                  : 'bg-white border-gray-100 hover:border-gray-200 shadow-sm'
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Receivables</span>
+                <div className="p-2 bg-red-100 text-red-600 rounded-xl">
+                  <AlertCircle className="w-4 h-4" />
+                </div>
+              </div>
+              <p className="text-2xl font-black text-red-600">
+                ₱{totalReceivables.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
+              </p>
+              <p className="text-xs text-gray-500 font-medium mt-1">
+                <strong className="text-red-700">{debtorsCount}</strong> customers with balances
+              </p>
+            </div>
+
+            <div 
+              onClick={() => setBalanceFilter('fully_paid')}
+              className={`p-5 rounded-3xl border transition-all cursor-pointer ${
+                balanceFilter === 'fully_paid' 
+                  ? 'bg-emerald-50 border-emerald-200 ring-2 ring-emerald-400' 
+                  : 'bg-white border-gray-100 hover:border-gray-200 shadow-sm'
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Fully Paid Customers</span>
+                <div className="p-2 bg-emerald-100 text-emerald-700 rounded-xl">
+                  <CheckCircle2 className="w-4 h-4" />
+                </div>
+              </div>
+              <p className="text-2xl font-black text-emerald-700">
+                {fullyPaidCount} <span className="text-sm font-semibold text-gray-500">accounts</span>
+              </p>
+              <p className="text-xs text-emerald-600 font-medium mt-1">
+                100% Settled / Zero Balance
+              </p>
+            </div>
+
+            <div 
+              onClick={() => setBalanceFilter('all')}
+              className={`p-5 rounded-3xl border transition-all cursor-pointer ${
+                balanceFilter === 'all' 
+                  ? 'bg-purple-50 border-purple-200 ring-2 ring-purple-400' 
+                  : 'bg-white border-gray-100 hover:border-gray-200 shadow-sm'
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Customers</span>
+                <div className="p-2 bg-purple-100 text-purple-700 rounded-xl">
+                  <User className="w-4 h-4" />
+                </div>
+              </div>
+              <p className="text-2xl font-black text-gray-900">
+                {customers.length} <span className="text-sm font-semibold text-gray-500">registered</span>
+              </p>
+              <p className="text-xs text-gray-500 font-medium mt-1">
+                Active customer ledger accounts
+              </p>
+            </div>
+          </div>
+
+          {/* Search and Balance Filter Tabs */}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
+            <div className="relative w-full md:flex-1">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Search customers by name or contact number..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-4 bg-white rounded-2xl border border-gray-100 shadow-sm focus:ring-2 focus:ring-green-500 outline-none transition-all text-sm font-medium"
+              />
+            </div>
+
+            {/* Filter Pills beside Search & Balances */}
+            <div className="flex items-center bg-gray-100 p-1.5 rounded-2xl shrink-0 w-full md:w-auto overflow-x-auto">
+              <button
+                type="button"
+                onClick={() => setBalanceFilter('all')}
+                className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                  balanceFilter === 'all'
+                    ? 'bg-white text-gray-900 shadow-xs'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                All Customers ({customers.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setBalanceFilter('outstanding')}
+                className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+                  balanceFilter === 'outstanding'
+                    ? 'bg-white text-red-600 shadow-xs'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <AlertCircle className="w-3.5 h-3.5 text-red-500" />
+                With Balances ({debtorsCount})
+              </button>
+              <button
+                type="button"
+                onClick={() => setBalanceFilter('fully_paid')}
+                className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+                  balanceFilter === 'fully_paid'
+                    ? 'bg-white text-emerald-700 shadow-xs'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                Fully Paid ({fullyPaidCount})
+              </button>
+            </div>
           </div>
   
           {loading ? (
@@ -212,15 +347,26 @@ export default function UtangPage() {
                   </div>
   
                   <div className="bg-gray-50 rounded-2xl p-4 mb-6">
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Current Balance</p>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Customer Balance</p>
+                      {customer.totalUtang <= 0.001 ? (
+                        <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 flex items-center gap-1 shadow-2xs">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                          Fully Paid
+                        </span>
+                      ) : (
+                        <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-red-100 text-red-700 flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3 text-red-500" />
+                          Outstanding
+                        </span>
+                      )}
+                    </div>
                     <div className="flex items-baseline justify-between">
-                      <p className={`text-2xl font-black ${customer.totalUtang > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                      <p className={`text-2xl font-black ${customer.totalUtang > 0.001 ? 'text-red-600' : 'text-emerald-700'}`}>
                         ₱{customer.totalUtang.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
                       </p>
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                        customer.totalUtang > 0 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
-                      }`}>
-                        {customer.totalUtang > 0 ? 'Outstanding' : 'Settled'}
+                      <span className="text-xs font-bold text-gray-400">
+                        {customer.totalUtang <= 0.001 ? 'Zero Balance' : 'Unpaid Balance'}
                       </span>
                     </div>
                   </div>

@@ -23,7 +23,14 @@ import { motion, AnimatePresence } from 'motion/react';
 interface RecordTransactionProps {
   customer: Customer;
   type: 'credit' | 'payment';
-  onSave: (customerId: string, amount: number, description: string, type: 'credit' | 'payment', targetCreditId?: string) => Promise<void>;
+  onSave: (
+    customerId: string, 
+    amount: number, 
+    description: string, 
+    type: 'credit' | 'payment', 
+    targetCreditId?: string,
+    customTimestamp?: number
+  ) => Promise<void>;
   onClose: () => void;
 }
 
@@ -32,6 +39,13 @@ export function RecordTransaction({ customer, type, onSave, onClose }: RecordTra
   const [description, setDescription] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Date picker for credit or payment date (defaults to current date and time)
+  const [transactionDate, setTransactionDate] = useState(() => {
+    const d = new Date();
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  });
 
   // Cross-matching state for payments
   const [unpaidCredits, setUnpaidCredits] = useState<MatchedCredit[]>([]);
@@ -96,6 +110,8 @@ export function RecordTransaction({ customer, type, onSave, onClose }: RecordTra
 
     if (!customer.id) return;
 
+    const customTimestamp = transactionDate ? new Date(transactionDate).getTime() : Date.now();
+
     setIsSaving(true);
     try {
       await onSave(
@@ -103,7 +119,8 @@ export function RecordTransaction({ customer, type, onSave, onClose }: RecordTra
         parseFloat(amount), 
         description.trim(), 
         type, 
-        selectedTargetCreditId || undefined
+        selectedTargetCreditId || undefined,
+        customTimestamp
       );
       onClose();
     } catch (err) {
@@ -176,6 +193,38 @@ export function RecordTransaction({ customer, type, onSave, onClose }: RecordTra
 
           {/* Form */}
           <form id="record-form" onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="flex items-center gap-2 text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  <Calendar className="w-3.5 h-3.5 text-blue-600" /> 
+                  {type === 'credit' ? 'Date Credit Incurred' : 'Payment Date Received'}
+                </label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const d = new Date();
+                    const pad = (n: number) => n.toString().padStart(2, '0');
+                    setTransactionDate(`${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`);
+                  }}
+                  className="text-[11px] font-bold text-blue-600 hover:text-blue-800 transition-colors cursor-pointer"
+                >
+                  Set to Now
+                </button>
+              </div>
+              <input
+                type="datetime-local"
+                required
+                value={transactionDate}
+                onChange={(e) => setTransactionDate(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all text-xs font-semibold text-gray-800 bg-gray-50/50"
+              />
+              <p className="text-[11px] text-gray-400 mt-1">
+                {type === 'credit' 
+                  ? 'Pick the date & time the credit was borrowed (you can backdate previous debts).'
+                  : 'Pick the date & time the payment was received (you can record previous payments).'}
+              </p>
+            </div>
+
             <div>
               <label className="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
                 <Coins className="w-3.5 h-3.5 text-gray-400" /> Amount (₱)

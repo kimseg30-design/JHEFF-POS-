@@ -58,13 +58,15 @@ export function useCustomers(branchId?: string) {
     amount: number, 
     description: string, 
     type: 'credit' | 'payment',
-    targetCreditId?: string
+    targetCreditId?: string,
+    customTimestamp?: number
   ) => {
     if (!branchId) throw new Error('Branch ID is required to record credit');
     const customer = customers.find(c => c.id === customerId);
     if (!customer) return;
 
     const now = Date.now();
+    const entryTimestamp = customTimestamp && !isNaN(customTimestamp) ? customTimestamp : now;
     const entry: Omit<CreditEntry, 'updatedAt' | 'isDeleted'> = {
       id: crypto.randomUUID(),
       customerId,
@@ -72,7 +74,7 @@ export function useCustomers(branchId?: string) {
       amount: type === 'credit' ? amount : -amount,
       type,
       description,
-      timestamp: now,
+      timestamp: entryTimestamp,
       ...(targetCreditId ? { targetCreditId } : {}),
     };
 

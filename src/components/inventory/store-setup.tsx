@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useStore } from '@/lib/hooks/use-store';
 import { useBranches } from '@/lib/hooks/use-branches';
+import { branchService } from '@/lib/services/branch-service';
 import { motion } from 'motion/react';
 import { Store, ArrowRight, Loader2 } from 'lucide-react';
 
@@ -20,12 +21,15 @@ export function StoreSetup() {
     setIsSaving(true);
     try {
       await updateStore(name, taxType);
-      // Create initial default branch
-      await addBranch({
-        name: 'Main Branch',
-        address: 'Default Address',
-        contact: 'N/A'
-      });
+      // Create initial default branch only if no branches exist
+      const existingBranches = (await branchService.getAll()).filter(b => !b.isDeleted);
+      if (existingBranches.length === 0) {
+        await addBranch({
+          name: 'JHEFF CONSTRUCTION BRANCH',
+          address: 'Default Address',
+          contact: 'N/A'
+        });
+      }
     } catch (error) {
       console.error('Setup failed:', error);
     } finally {

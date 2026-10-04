@@ -45,15 +45,22 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
       // Load Branches
       const businessId = currentStore?.id || 'main_config';
-      let activeBranches = await branchService.getByBusiness(businessId);
+      const allBranchesInDb = (await branchService.getAll()).filter(b => !b.isDeleted);
       
-      // Auto-create Main Branch if none exists
-      if (activeBranches.length === 0) {
+      let activeBranches = allBranchesInDb.filter(b => b.businessId === businessId);
+      
+      // If branches exist in DB but under different businessId, reuse them instead of creating duplicates
+      if (activeBranches.length === 0 && allBranchesInDb.length > 0) {
+        activeBranches = allBranchesInDb;
+      }
+      
+      // ONLY create a default branch if absolutely zero branches exist in the database
+      if (activeBranches.length === 0 && allBranchesInDb.length === 0) {
         const id = crypto.randomUUID();
         const now = Date.now();
         const mainBranch: Branch = {
           id,
-          name: 'Main Branch',
+          name: 'JHEFF CONSTRUCTION BRANCH',
           address: currentStore?.address || 'Main Address',
           businessId,
           createdAt: now,
@@ -62,7 +69,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         };
         await branchService.create(mainBranch);
         activeBranches = [mainBranch];
-        await auditService.log('BRANCH_AUTO_CREATE', JSON.stringify({ name: 'Main Branch', id }));
+        await auditService.log('BRANCH_AUTO_CREATE', JSON.stringify({ name: mainBranch.name, id }));
       }
 
       setBranches(activeBranches.sort((a, b) => b.createdAt - a.createdAt));
