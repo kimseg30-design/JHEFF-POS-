@@ -45,7 +45,7 @@ export default function AuditTrailPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 font-sans transition-colors">
       <Header />
       
       <div className="p-6 md:p-12 max-w-7xl mx-auto">

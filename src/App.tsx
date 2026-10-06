@@ -1,5 +1,6 @@
 import React, { Suspense, lazy } from 'react';
 import { RouterProvider, usePathname } from '@/lib/router-shim';
+import { ThemeProvider } from '@/lib/contexts/theme-context';
 import { AuthProvider } from '@/lib/contexts/auth-context';
 import { ReceiptProvider } from '@/lib/context/receipt-context';
 import { StoreProvider } from '@/lib/hooks/use-store';
@@ -27,7 +28,7 @@ const AdminUsers = lazy(() => import('@/pages/admin/users/page'));
 
 function PageLoader() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 transition-colors">
       <Loader2 className="w-8 h-8 animate-spin text-orange-600" />
     </div>
   );
@@ -80,17 +81,21 @@ function AppContent() {
 
 export default function App() {
   return (
-    <RouterProvider>
-      <StoreProvider>
-        <AuthProvider>
-          <ReceiptProvider>
-            <Suspense fallback={<PageLoader />}>
-              <AppContent />
-            </Suspense>
-            <OfflineIndicator />
-          </ReceiptProvider>
-        </AuthProvider>
-      </StoreProvider>
-    </RouterProvider>
+    <ThemeProvider>
+      <RouterProvider>
+        <StoreProvider>
+          <AuthProvider>
+            <ReceiptProvider>
+              <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors">
+                <Suspense fallback={<PageLoader />}>
+                  <AppContent />
+                </Suspense>
+                <OfflineIndicator />
+              </div>
+            </ReceiptProvider>
+          </AuthProvider>
+        </StoreProvider>
+      </RouterProvider>
+    </ThemeProvider>
   );
 }

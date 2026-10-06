@@ -116,7 +116,7 @@ export default function DailySummaryPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col font-sans transition-colors">
       <Header />
       
       <div className="flex-1 p-6 md:p-12 overflow-y-auto">

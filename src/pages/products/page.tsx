@@ -37,7 +37,7 @@ export default function ProductsPage() {
 
   if (!loadingBranches && !currentBranchId) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col font-sans transition-colors">
         <Header />
         <div className="flex-1 flex items-center justify-center p-6">
           <div className="max-w-md w-full bg-white rounded-[3rem] p-12 text-center border border-gray-100 shadow-xl shadow-gray-200/50">
@@ -118,7 +118,7 @@ export default function ProductsPage() {
 
   return (
     <AuthGuard>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors">
         <Header />
         
         <div className="max-w-7xl mx-auto p-6">
@@ -131,8 +131,8 @@ export default function ProductsPage() {
                 <ArrowLeft className="w-6 h-6" />
               </Link>
               <div>
-                <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Inventory</h2>
-                <p className="text-gray-500 font-medium">Manage your store products and stock.</p>
+                <h2 className="text-3xl font-black text-gray-950 dark:text-white tracking-tight">Inventory</h2>
+                <p className="text-gray-600 dark:text-gray-300 font-bold text-sm mt-0.5">Manage your store products and stock.</p>
               </div>
             </div>
   
@@ -140,14 +140,14 @@ export default function ProductsPage() {
               <div className="flex items-center gap-3">
                 <button
                   onClick={handleExport}
-                  className="bg-white hover:bg-gray-50 text-gray-900 font-bold px-6 py-4 rounded-2xl flex items-center justify-center gap-2 border border-gray-200 shadow-sm transition-all active:scale-95"
+                  className="bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900 dark:text-white font-black px-6 py-4 rounded-2xl flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-700 shadow-sm transition-all active:scale-95 cursor-pointer text-xs uppercase tracking-wider"
                 >
                   <Download className="w-5 h-5" />
                   Export CSV
                 </button>
                 <button
                   onClick={() => setIsImportOpen(true)}
-                  className="bg-white hover:bg-gray-50 text-gray-900 font-bold px-6 py-4 rounded-2xl flex items-center justify-center gap-2 border border-gray-200 shadow-sm transition-all active:scale-95"
+                  className="bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900 dark:text-white font-black px-6 py-4 rounded-2xl flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-700 shadow-sm transition-all active:scale-95 cursor-pointer text-xs uppercase tracking-wider"
                 >
                   <Upload className="w-5 h-5" />
                   Import CSV
@@ -157,7 +157,7 @@ export default function ProductsPage() {
                     setEditingProduct(null);
                     setIsFormOpen(true);
                   }}
-                  className="bg-orange-600 hover:bg-orange-700 text-white font-bold px-6 py-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-orange-200 transition-all active:scale-95"
+                  className="bg-orange-600 hover:bg-orange-700 text-white font-black px-6 py-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-orange-500/20 transition-all active:scale-95 cursor-pointer text-xs uppercase tracking-wider"
                 >
                   <Plus className="w-5 h-5" />
                   Add New Product
@@ -167,25 +167,25 @@ export default function ProductsPage() {
           </div>
   
           {isCashier && (
-            <div className="mb-8 p-6 bg-blue-50 rounded-3xl border border-blue-100 flex items-center gap-4 text-blue-900">
+            <div className="mb-8 p-6 bg-blue-50 dark:bg-blue-950/40 rounded-3xl border border-blue-200 dark:border-blue-900 flex items-center gap-4 text-blue-950 dark:text-blue-200">
               <div className="bg-blue-600 p-3 rounded-2xl text-white">
                 <ShieldAlert className="w-6 h-6" />
               </div>
               <div>
-                <p className="font-black uppercase tracking-widest text-[10px] mb-1 opacity-70">Cashier Mode</p>
+                <p className="font-black uppercase tracking-widest text-[10px] mb-1 opacity-90">Cashier Mode</p>
                 <p className="font-bold">You have read-only access to the inventory. Product editing is disabled.</p>
               </div>
             </div>
           )}
   
           <div className="relative mb-8">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 w-5 h-5" />
             <input
               type="text"
               placeholder="Search products by name or category..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 bg-white rounded-2xl border border-gray-100 shadow-sm focus:ring-2 focus:ring-orange-500 outline-none transition-all"
+              className="w-full pl-12 pr-4 py-4 bg-white dark:bg-gray-900 text-gray-950 dark:text-white rounded-2xl border-2 border-gray-300 dark:border-gray-700 shadow-sm focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none transition-all font-bold placeholder:text-gray-500 dark:placeholder:text-gray-400"
             />
           </div>
   

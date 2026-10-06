@@ -20,6 +20,20 @@ interface ReceiptProps {
   vatAmount?: number;
   taxType?: 'VAT' | 'NON-VAT';
   paymentMethod: string;
+  amountPaid?: number;
+  change?: number;
+  customerName?: string;
+  splitBreakdown?: {
+    method: string;
+    amount: number;
+    reference?: string;
+    customerName?: string;
+  }[];
+  paymentDetails?: {
+    referenceNumber?: string;
+    bankName?: string;
+    notes?: string;
+  };
   type?: 'sales' | 'ewallet';
   ewalletDetails?: {
     type: string;
@@ -117,7 +131,20 @@ const EWalletDetails = ({ details, total }: { details: any, total: number }) => 
   </div>
 );
 
-const ReceiptFooter = ({ total, paymentMethod, type, ewalletDetails, vatableSales, vatAmount, taxType }: any) => {
+const ReceiptFooter = ({ 
+  total, 
+  paymentMethod, 
+  amountPaid, 
+  change, 
+  customerName, 
+  splitBreakdown, 
+  paymentDetails, 
+  type, 
+  ewalletDetails, 
+  vatableSales, 
+  vatAmount, 
+  taxType 
+}: any) => {
   const vatExempt = 0;
   const zeroRated = 0;
   
@@ -149,9 +176,63 @@ const ReceiptFooter = ({ total, paymentMethod, type, ewalletDetails, vatableSale
           <span>{type === 'sales' ? 'TOTAL:' : 'GRAND TOTAL:'}</span>
           <span>₱{(type === 'sales' ? total : total + (ewalletDetails?.fee || 0)).toFixed(2)}</span>
         </div>
-        <div className="flex justify-between opacity-70 text-[10px]">
-          <span>Payment:</span>
-          <span className="uppercase font-bold">{paymentMethod}</span>
+
+        {/* Payment Method Details */}
+        <div className="pt-2 border-t border-dashed border-black/40 space-y-1 text-[10px]">
+          <div className="flex justify-between font-bold">
+            <span>Payment Mode:</span>
+            <span className="uppercase">{paymentMethod?.replace('_', ' ')}</span>
+          </div>
+
+          {customerName && (
+            <div className="flex justify-between opacity-80">
+              <span>Customer:</span>
+              <span className="font-bold uppercase">{customerName}</span>
+            </div>
+          )}
+
+          {paymentDetails?.bankName && (
+            <div className="flex justify-between opacity-80">
+              <span>Bank:</span>
+              <span>{paymentDetails.bankName}</span>
+            </div>
+          )}
+
+          {paymentDetails?.referenceNumber && (
+            <div className="flex justify-between opacity-80">
+              <span>Ref No:</span>
+              <span>{paymentDetails.referenceNumber}</span>
+            </div>
+          )}
+
+          {/* Split Breakdown */}
+          {splitBreakdown && splitBreakdown.length > 0 && (
+            <div className="mt-1 pt-1 border-t border-dotted border-black/40 space-y-0.5">
+              <span className="font-bold opacity-70 block">Split Breakdown:</span>
+              {splitBreakdown.map((portion: any, idx: number) => (
+                <div key={idx} className="flex justify-between pl-1">
+                  <span className="uppercase">
+                    • {portion.method === 'credit' ? `Credit (${portion.customerName || 'Customer'})` : portion.method}:
+                  </span>
+                  <span className="font-bold">₱{Number(portion.amount || 0).toFixed(2)}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {amountPaid !== undefined && amountPaid > 0 && (
+            <div className="flex justify-between opacity-80">
+              <span>Amount Tendered:</span>
+              <span>₱{Number(amountPaid).toFixed(2)}</span>
+            </div>
+          )}
+
+          {change !== undefined && change > 0 && (
+            <div className="flex justify-between font-bold">
+              <span>Change:</span>
+              <span>₱{Number(change).toFixed(2)}</span>
+            </div>
+          )}
         </div>
       </div>
       <div className="text-center mt-8 space-y-1">
@@ -173,6 +254,11 @@ export function Receipt({
   items, 
   total, 
   paymentMethod,
+  amountPaid,
+  change,
+  customerName,
+  splitBreakdown,
+  paymentDetails,
   type = 'sales',
   ewalletDetails,
   vatableSales,
@@ -298,6 +384,11 @@ export function Receipt({
             <ReceiptFooter 
               total={total} 
               paymentMethod={paymentMethod} 
+              amountPaid={amountPaid}
+              change={change}
+              customerName={customerName}
+              splitBreakdown={splitBreakdown}
+              paymentDetails={paymentDetails}
               type={type} 
               ewalletDetails={ewalletDetails} 
               vatableSales={vatableSales}

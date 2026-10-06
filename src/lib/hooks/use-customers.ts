@@ -29,18 +29,21 @@ export function useCustomers(branchId?: string) {
     fetchCustomers();
   }, [fetchCustomers]);
 
-  const addCustomer = async (customer: Omit<Customer, 'id' | 'createdAt' | 'updatedAt' | 'totalUtang' | 'branchId' | 'isDeleted'>) => {
+  const addCustomer = async (customer: Omit<Customer, 'id' | 'createdAt' | 'updatedAt' | 'totalUtang' | 'branchId' | 'isDeleted'>): Promise<Customer> => {
     if (!branchId) throw new Error('Branch ID is required to add a customer');
     const id = crypto.randomUUID();
     const now = Date.now();
-    await customerService.create({
+    const newCustomer: Customer = {
       ...customer,
       id,
       totalUtang: 0,
       branchId,
       createdAt: now,
-    });
+      updatedAt: now,
+    };
+    await customerService.create(newCustomer);
     await fetchCustomers();
+    return newCustomer;
   };
 
   const updateCustomer = async (customer: Customer) => {

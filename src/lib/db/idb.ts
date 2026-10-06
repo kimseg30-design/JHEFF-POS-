@@ -57,7 +57,22 @@ export type Transaction = {
   timestamp: number;
   branchId: string; // Reference to Branch
   customerId?: string; // UUID
-  paymentMethod: 'cash' | 'utang';
+  customerName?: string;
+  paymentMethod: 'cash' | 'gcash' | 'bank_transfer' | 'credit' | 'utang' | 'split' | string;
+  amountPaid?: number;
+  change?: number;
+  paymentDetails?: {
+    referenceNumber?: string;
+    bankName?: string;
+    splitBreakdown?: {
+      method: string;
+      amount: number;
+      reference?: string;
+      customerId?: string;
+      customerName?: string;
+    }[];
+    notes?: string;
+  };
   updatedAt: number;
   isDeleted?: boolean;
 };

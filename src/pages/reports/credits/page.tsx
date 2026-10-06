@@ -503,7 +503,7 @@ export default function CreditReportPage() {
 
   return (
     <AuthGuard>
-      <div className="min-h-screen bg-gray-50 flex flex-col font-sans print:bg-white">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col font-sans print:bg-white transition-colors">
         <div className="print:hidden">
           <Header />
         </div>

@@ -55,7 +55,7 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 transition-colors">
         <Loader2 className="w-12 h-12 animate-spin text-orange-600" />
       </div>
     );
@@ -72,10 +72,10 @@ export default function Home() {
       href: '/pos',
       icon: ShoppingCart,
       color: 'bg-blue-600',
-      shadow: 'shadow-blue-100',
-      bg: 'bg-blue-50',
-      textColor: 'text-blue-900',
-      accentColor: 'text-blue-600/70'
+      shadow: 'shadow-blue-100 dark:shadow-none',
+      bg: 'bg-blue-50 dark:bg-blue-950/30 dark:border dark:border-blue-900/30',
+      textColor: 'text-blue-900 dark:text-blue-200',
+      accentColor: 'text-blue-600/70 dark:text-blue-400/80'
     },
     {
       title: 'Daily Summary',
@@ -83,10 +83,10 @@ export default function Home() {
       href: '/reports/daily',
       icon: LayoutDashboard,
       color: 'bg-rose-600',
-      shadow: 'shadow-rose-100',
-      bg: 'bg-rose-50',
-      textColor: 'text-rose-900',
-      accentColor: 'text-rose-600/70'
+      shadow: 'shadow-rose-100 dark:shadow-none',
+      bg: 'bg-rose-50 dark:bg-rose-950/30 dark:border dark:border-rose-900/30',
+      textColor: 'text-rose-900 dark:text-rose-200',
+      accentColor: 'text-rose-600/70 dark:text-rose-400/80'
     },
     {
       title: 'Inventory',
@@ -94,10 +94,10 @@ export default function Home() {
       href: '/products',
       icon: Package,
       color: 'bg-orange-600',
-      shadow: 'shadow-orange-100',
-      bg: 'bg-orange-50',
-      textColor: 'text-orange-900',
-      accentColor: 'text-orange-600/70'
+      shadow: 'shadow-orange-100 dark:shadow-none',
+      bg: 'bg-orange-50 dark:bg-orange-950/30 dark:border dark:border-orange-900/30',
+      textColor: 'text-orange-900 dark:text-orange-200',
+      accentColor: 'text-orange-600/70 dark:text-orange-400/80'
     },
     {
       title: 'Restocking',
@@ -105,10 +105,10 @@ export default function Home() {
       href: '/restocking',
       icon: Truck,
       color: 'bg-indigo-600',
-      shadow: 'shadow-indigo-100',
-      bg: 'bg-indigo-50',
-      textColor: 'text-indigo-900',
-      accentColor: 'text-indigo-600/70',
+      shadow: 'shadow-indigo-100 dark:shadow-none',
+      bg: 'bg-indigo-50 dark:bg-indigo-950/30 dark:border dark:border-indigo-900/30',
+      textColor: 'text-indigo-900 dark:text-indigo-200',
+      accentColor: 'text-indigo-600/70 dark:text-indigo-400/80',
       adminOnly: true
     },
     {
@@ -117,10 +117,10 @@ export default function Home() {
       href: '/expenses',
       icon: TrendingDown,
       color: 'bg-red-600',
-      shadow: 'shadow-red-100',
-      bg: 'bg-red-50',
-      textColor: 'text-red-900',
-      accentColor: 'text-red-600/70'
+      shadow: 'shadow-red-100 dark:shadow-none',
+      bg: 'bg-red-50 dark:bg-red-950/30 dark:border dark:border-red-900/30',
+      textColor: 'text-red-900 dark:text-red-200',
+      accentColor: 'text-red-600/70 dark:text-red-400/80'
     },
     {
       title: 'Credit & Receivables',
@@ -128,10 +128,10 @@ export default function Home() {
       href: '/utang',
       icon: Users,
       color: 'bg-green-600',
-      shadow: 'shadow-green-100',
-      bg: 'bg-green-50',
-      textColor: 'text-green-900',
-      accentColor: 'text-green-600/70',
+      shadow: 'shadow-green-100 dark:shadow-none',
+      bg: 'bg-green-50 dark:bg-green-950/30 dark:border dark:border-green-900/30',
+      textColor: 'text-green-900 dark:text-green-200',
+      accentColor: 'text-green-600/70 dark:text-green-400/80',
       adminOnly: true
     },
     {
@@ -140,10 +140,10 @@ export default function Home() {
       href: '/reports',
       icon: BarChart3,
       color: 'bg-purple-600',
-      shadow: 'shadow-purple-100',
-      bg: 'bg-purple-50',
-      textColor: 'text-purple-900',
-      accentColor: 'text-purple-600/70',
+      shadow: 'shadow-purple-100 dark:shadow-none',
+      bg: 'bg-purple-50 dark:bg-purple-950/30 dark:border dark:border-purple-900/30',
+      textColor: 'text-purple-900 dark:text-purple-200',
+      accentColor: 'text-purple-600/70 dark:text-purple-400/80',
       adminOnly: true
     },
     {
@@ -152,10 +152,10 @@ export default function Home() {
       href: '/settings',
       icon: Settings,
       color: 'bg-gray-600',
-      shadow: 'shadow-gray-100',
-      bg: 'bg-gray-50',
-      textColor: 'text-gray-900',
-      accentColor: 'text-gray-600/70',
+      shadow: 'shadow-gray-100 dark:shadow-none',
+      bg: 'bg-gray-50 dark:bg-gray-900/50 dark:border dark:border-gray-800',
+      textColor: 'text-gray-900 dark:text-gray-200',
+      accentColor: 'text-gray-600/70 dark:text-gray-400/80',
       adminOnly: true
     }
   ];
@@ -164,7 +164,7 @@ export default function Home() {
 
   return (
     <AuthGuard>
-      <main className="min-h-screen bg-gray-50 font-sans">
+      <main className="min-h-screen bg-gray-50 dark:bg-gray-950 font-sans transition-colors">
         <Header />
         
         <div className="p-6 md:p-12 max-w-7xl mx-auto">
@@ -259,17 +259,17 @@ export default function Home() {
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-[3rem] p-8 md:p-16 text-center border border-gray-100 shadow-2xl relative overflow-hidden"
+            className="bg-white dark:bg-gray-900 rounded-[3rem] p-8 md:p-16 text-center border border-gray-100 dark:border-gray-800 shadow-2xl relative overflow-hidden transition-colors"
           >
             {/* Decorative background element */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-orange-50 rounded-full -mr-32 -mt-32 opacity-50 blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-50 rounded-full -ml-32 -mb-32 opacity-50 blur-3xl" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-orange-50 dark:bg-orange-950/20 rounded-full -mr-32 -mt-32 opacity-50 blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-50 dark:bg-blue-950/20 rounded-full -ml-32 -mb-32 opacity-50 blur-3xl pointer-events-none" />
   
             <div className="relative z-10">
-              <h2 className="text-4xl md:text-6xl font-black text-gray-900 mb-6 tracking-tighter leading-tight">
+              <h2 className="text-4xl md:text-6xl font-black text-gray-900 dark:text-white mb-6 tracking-tighter leading-tight">
                 Mabuhay, {store.name}!
               </h2>
-              <p className="text-xl text-gray-500 mb-16 font-medium max-w-2xl mx-auto">
+              <p className="text-xl text-gray-500 dark:text-gray-400 mb-16 font-medium max-w-2xl mx-auto">
                 Your store is open and ready for business. What would you like to do today?
               </p>
               
@@ -333,13 +333,13 @@ export default function Home() {
               </div>
             </div>
             
-            <div className="bg-white rounded-[2.5rem] p-8 border border-gray-100 shadow-xl flex items-center justify-between">
+            <div className="bg-white dark:bg-gray-900 rounded-[2.5rem] p-8 border border-gray-100 dark:border-gray-800 shadow-xl flex items-center justify-between transition-colors">
               <div>
-                <p className="text-gray-400 font-black text-[10px] uppercase tracking-widest mb-2">Offline Ready</p>
-                <h4 className="text-xl font-bold tracking-tight text-gray-900">Your data is saved locally for offline use.</h4>
+                <p className="text-gray-400 dark:text-gray-500 font-black text-[10px] uppercase tracking-widest mb-2">Offline Ready</p>
+                <h4 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">Your data is saved locally for offline use.</h4>
               </div>
-              <div className="bg-green-50 p-4 rounded-2xl">
-                <Package className="w-8 h-8 text-green-600" />
+              <div className="bg-green-50 dark:bg-emerald-950/50 p-4 rounded-2xl">
+                <Package className="w-8 h-8 text-green-600 dark:text-emerald-400" />
               </div>
             </div>
           </div>

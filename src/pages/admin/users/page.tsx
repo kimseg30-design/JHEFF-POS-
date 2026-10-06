@@ -98,7 +98,7 @@ export default function UsersManagementPage() {
   if (usersLoading && users.length === 0 && !searchQuery) {
     return (
       <AuthGuard allowedRoles={['admin']}>
-        <div className="min-h-screen bg-gray-50 font-sans">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 font-sans transition-colors">
           <Header />
           <main className="max-w-7xl mx-auto px-4 md:px-8 py-20 text-center">
             <Loader2 className="w-12 h-12 text-blue-600 animate-spin mx-auto mb-4" />
@@ -111,7 +111,7 @@ export default function UsersManagementPage() {
 
   return (
     <AuthGuard allowedRoles={['admin']}>
-      <div className="min-h-screen bg-gray-50 font-sans">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 font-sans transition-colors">
         <Header />
         
         <main className="max-w-7xl mx-auto px-4 md:px-8 py-8">

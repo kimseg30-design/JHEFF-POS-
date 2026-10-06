@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect, useCallback, useDeferredValue } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, useDeferredValue, useRef } from 'react';
 import { useProducts } from '@/lib/hooks/use-products';
 import { useCart } from '@/lib/hooks/use-cart';
 import { useTransactions } from '@/lib/hooks/use-transactions';
@@ -9,6 +9,7 @@ import { useEWallet } from '@/lib/hooks/use-ewallet';
 import { useBranches } from '@/lib/hooks/use-branches';
 import { useStore } from '@/lib/hooks/use-store';
 import { useReceipt } from '@/lib/context/receipt-context';
+import { useCustomers } from '@/lib/hooks/use-customers';
 import { Product } from '@/lib/db/idb';
 import { auditService } from '@/lib/services/audit-service';
 import { Header } from '@/components/layout/header';
@@ -17,6 +18,7 @@ import { EWalletModal } from '@/components/pos/ewallet-modal';
 import { ProductCard } from '@/components/pos/product-card';
 import { CartItem } from '@/components/pos/cart-item';
 import { CheckoutSummary } from '@/components/pos/checkout-summary';
+import { CheckoutModal, CheckoutResult } from '@/components/pos/checkout-modal';
 import { SuccessOverlay } from '@/components/pos/success-overlay';
 import { 
   Search, 
@@ -27,7 +29,9 @@ import {
   Filter,
   History,
   Wallet,
-  MapPin
+  MapPin,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
@@ -37,21 +41,51 @@ export default function POSPage() {
   const { currentBranchId, currentBranch, loading: loadingBranches } = useBranches();
   const { store, getNextORNumber, products, addProduct } = useStore();
   const { updateProduct, refresh } = useProducts(currentBranchId || undefined);
-  const { cart, addToCart, updateQuantity, removeFromCart, clearCart, total } = useCart();
+  const { cart, addToCart, updateQuantity, setItemQuantity, removeFromCart, clearCart, total } = useCart();
+  const { customers, addCustomer, recordCredit } = useCustomers(currentBranchId || undefined);
   const { addTransaction } = useTransactions(currentBranchId || undefined);
   const { currentTicket, rotateTicket } = useTicket(currentBranchId || undefined);
   const { addTransaction: addEWalletTransaction } = useEWallet(currentBranchId || undefined);
   const { showReceipt } = useReceipt();
   
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const deferredSearch = useDeferredValue(searchQuery);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [displayLimit, setDisplayLimit] = useState(36);
+  const [currentPage, setCurrentPage] = useState(1);
+  const POS_ITEMS_PER_PAGE = 20; // 5 columns x 4 rows pagination
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [isEWalletOpen, setIsEWalletOpen] = useState(false);
   const [completedTicket, setCompletedTicket] = useState<string>('');
   const [showCartMobile, setShowCartMobile] = useState(false);
+
+  // Keyboard shortcut to instantly access search: '/' or 'Ctrl+K' / 'Cmd+K'
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        e.key === '/' &&
+        document.activeElement?.tagName !== 'INPUT' &&
+        document.activeElement?.tagName !== 'TEXTAREA'
+      ) {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+        searchInputRef.current?.select();
+      } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+        searchInputRef.current?.select();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Reset to page 1 whenever search query or category changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [deferredSearch, selectedCategory]);
 
   const categories = useMemo(() => {
     const cats = Array.from(new Set(products.map(p => p.category)));
@@ -67,9 +101,12 @@ export default function POSPage() {
     });
   }, [products, deferredSearch, selectedCategory]);
 
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / POS_ITEMS_PER_PAGE));
+
   const visibleProducts = useMemo(() => {
-    return filteredProducts.slice(0, displayLimit);
-  }, [filteredProducts, displayLimit]);
+    const start = (currentPage - 1) * POS_ITEMS_PER_PAGE;
+    return filteredProducts.slice(start, start + POS_ITEMS_PER_PAGE);
+  }, [filteredProducts, currentPage, POS_ITEMS_PER_PAGE]);
 
   const handleAddToCart = useCallback((product: Product) => {
     addToCart(product);
@@ -93,7 +130,20 @@ export default function POSPage() {
     }
   };
 
-  const handleCheckout = async () => {
+  const handleCheckout = () => {
+    if (cart.length === 0 || !currentBranchId) return;
+    setIsCheckoutModalOpen(true);
+  };
+
+  const handleAddNewCustomerInline = async (name: string, contact: string) => {
+    if (!currentBranchId) return undefined;
+    return await addCustomer({
+      name,
+      contact,
+    });
+  };
+
+  const handleConfirmCheckout = async (result: CheckoutResult) => {
     if (cart.length === 0 || isCheckingOut || !currentBranchId) return;
     
     setIsCheckingOut(true);
@@ -111,7 +161,32 @@ export default function POSPage() {
         vatAmount = total - vatableSales;
       }
 
-      // 1. Create transaction as a ticket
+      // 1. Process credit account balances
+      if (result.paymentMethod === 'credit' && result.customerId) {
+        await recordCredit(
+          result.customerId,
+          total,
+          `POS Ticket ${ticketToFinalize} (Credit Purchase)`,
+          'credit',
+          undefined,
+          now
+        );
+      } else if (result.paymentMethod === 'split' && result.paymentDetails.splitBreakdown) {
+        for (const portion of result.paymentDetails.splitBreakdown) {
+          if (portion.method === 'credit' && portion.amount > 0 && portion.customerId) {
+            await recordCredit(
+              portion.customerId,
+              portion.amount,
+              `POS Ticket ${ticketToFinalize} (Split Credit Portion)`,
+              'credit',
+              undefined,
+              now
+            );
+          }
+        }
+      }
+
+      // 2. Create transaction as a ticket with payment mode details
       await addTransaction({
         ticketNumber: ticketToFinalize,
         orNumber,
@@ -122,7 +197,12 @@ export default function POSPage() {
         taxType: store?.taxType || 'NON-VAT',
         timestamp: now,
         branchId: currentBranchId,
-        paymentMethod: 'cash',
+        customerId: result.customerId,
+        customerName: result.customerName,
+        paymentMethod: result.paymentMethod,
+        amountPaid: result.amountPaid,
+        change: result.change,
+        paymentDetails: result.paymentDetails,
       });
 
       await auditService.log('TRANSACTION_COMPLETE', JSON.stringify({
@@ -130,10 +210,12 @@ export default function POSPage() {
         orNumber,
         total,
         itemsCount: cart.length,
-        paymentMethod: 'cash'
+        paymentMethod: result.paymentMethod,
+        amountPaid: result.amountPaid,
+        change: result.change,
       }));
 
-      // 2. Update stock
+      // 3. Update stock
       for (const item of cart) {
         const product = products.find(p => p.id === item.productId);
         if (product) {
@@ -146,6 +228,8 @@ export default function POSPage() {
       }
 
       setCompletedTicket(ticketToFinalize);
+      setIsCheckoutModalOpen(false);
+
       showReceipt({
         ticketNumber: ticketToFinalize,
         orNumber,
@@ -155,7 +239,12 @@ export default function POSPage() {
         vatableSales,
         vatAmount,
         taxType: store?.taxType || 'NON-VAT',
-        paymentMethod: 'cash',
+        paymentMethod: result.paymentMethod,
+        amountPaid: result.amountPaid,
+        change: result.change,
+        customerName: result.customerName,
+        splitBreakdown: result.paymentDetails.splitBreakdown,
+        paymentDetails: result.paymentDetails,
         type: 'sales'
       }, async () => {
         // Automatically create a new empty ticket by rotating after receipt is closed
@@ -166,6 +255,7 @@ export default function POSPage() {
       setShowCartMobile(false);
     } catch (error) {
       console.error('Checkout failed:', error);
+      alert('Failed to complete checkout. Please check the logs.');
     } finally {
       setIsCheckingOut(false);
     }
@@ -215,20 +305,20 @@ export default function POSPage() {
 
   if (!loadingBranches && !currentBranchId) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col font-sans transition-colors">
         <Header />
         <div className="flex-1 flex items-center justify-center p-6">
-          <div className="max-w-md w-full bg-white rounded-[3rem] p-12 text-center border border-gray-100 shadow-xl shadow-gray-200/50">
-            <div className="w-24 h-24 bg-red-50 rounded-[2.5rem] flex items-center justify-center mx-auto mb-8 text-red-600">
+          <div className="max-w-md w-full bg-white dark:bg-gray-900 rounded-[3rem] p-12 text-center border border-gray-100 dark:border-gray-800 shadow-xl shadow-gray-200/50 dark:shadow-none">
+            <div className="w-24 h-24 bg-red-50 dark:bg-rose-950/40 rounded-[2.5rem] flex items-center justify-center mx-auto mb-8 text-red-600 dark:text-red-400">
               <MapPin className="w-12 h-12" />
             </div>
-            <h2 className="text-3xl font-black text-gray-900 tracking-tight uppercase mb-4">No Branch Access</h2>
-            <p className="text-gray-500 font-medium leading-relaxed mb-8">
+            <h2 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight uppercase mb-4">No Branch Access</h2>
+            <p className="text-gray-500 dark:text-gray-400 font-medium leading-relaxed mb-8">
               You haven&apos;t been assigned to any branches yet. Please contact your administrator to get access.
             </p>
             <Link 
               href="/"
-              className="inline-flex items-center gap-3 px-8 py-4 bg-gray-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-black transition-all"
+              className="inline-flex items-center gap-3 px-8 py-4 bg-gray-900 dark:bg-gray-800 hover:bg-black dark:hover:bg-gray-700 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Dashboard
@@ -241,7 +331,7 @@ export default function POSPage() {
 
   return (
     <AuthGuard>
-      <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col font-sans transition-colors">
         <Header ticketNumber={currentTicket} />
         
         <div className="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
@@ -253,15 +343,15 @@ export default function POSPage() {
                   <div className="flex items-center gap-4">
                     <Link 
                       href="/"
-                      className="p-3 bg-white hover:bg-gray-50 rounded-2xl transition-all text-gray-400 hover:text-gray-900 border border-gray-100 shadow-sm"
+                      className="p-3 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-2xl transition-all text-gray-400 hover:text-gray-900 dark:hover:text-white border border-gray-100 dark:border-gray-800 shadow-sm"
                     >
                       <ArrowLeft className="w-6 h-6" />
                     </Link>
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <h2 className="text-3xl font-black text-gray-900 tracking-tight uppercase">Checkout</h2>
+                        <h2 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight uppercase">Checkout</h2>
                         {currentBranch && (
-                          <span className="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">
+                          <span className="bg-orange-100 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">
                             <MapPin className="w-3 h-3" />
                             {currentBranch.name}
                           </span>
@@ -275,14 +365,14 @@ export default function POSPage() {
                     <QuickAdd onAdd={handleQuickAdd} />
                     <button
                       onClick={() => setIsEWalletOpen(true)}
-                      className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-2xl transition-all text-white shadow-lg shadow-blue-100 font-black text-xs uppercase tracking-widest"
+                      className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-2xl transition-all text-white shadow-lg shadow-blue-100 dark:shadow-none font-black text-xs uppercase tracking-widest cursor-pointer"
                     >
                       <Wallet className="w-4 h-4" />
                       E-Wallet
                     </button>
                     <Link
                       href="/pos/history"
-                      className="flex items-center gap-2 px-6 py-3 bg-white hover:bg-gray-50 rounded-2xl transition-all text-gray-900 border border-gray-100 shadow-sm font-black text-xs uppercase tracking-widest"
+                      className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-2xl transition-all text-gray-900 dark:text-white border border-gray-100 dark:border-gray-800 shadow-sm font-black text-xs uppercase tracking-widest"
                     >
                       <History className="w-4 h-4" />
                       History
@@ -291,24 +381,45 @@ export default function POSPage() {
                 </div>
                 
                 <div className="flex flex-col md:flex-row gap-4">
+                  {/* Highly Accessible Search Input with Shortcut and Clear Button */}
                   <div className="relative flex-1">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 w-5 h-5 pointer-events-none" />
                     <input
+                      ref={searchInputRef}
                       type="text"
-                      placeholder="Search products or categories..."
+                      placeholder="Search products or categories... (Press / to search)"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-12 pr-4 py-4 bg-white rounded-[2rem] border border-gray-100 shadow-sm focus:ring-4 focus:ring-orange-500/10 outline-none transition-all text-lg font-medium"
+                      className="w-full pl-12 pr-20 py-4 bg-white dark:bg-gray-900 text-gray-950 dark:text-white rounded-[2rem] border-2 border-gray-300 dark:border-gray-700 shadow-sm focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none transition-all text-base sm:text-lg font-bold placeholder:text-gray-500 dark:placeholder:text-gray-400"
                     />
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+                      {searchQuery ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSearchQuery('');
+                            searchInputRef.current?.focus();
+                          }}
+                          className="p-1.5 text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg cursor-pointer transition-colors"
+                          title="Clear search"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      ) : (
+                        <kbd className="hidden sm:inline-flex items-center px-2 py-0.5 text-[11px] font-black text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-2xs">
+                          /
+                        </kbd>
+                      )}
+                    </div>
                   </div>
                   
                   <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
                     <button
                       onClick={() => setSelectedCategory(null)}
-                      className={`px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all whitespace-nowrap border ${
+                      className={`px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all whitespace-nowrap border cursor-pointer ${
                         !selectedCategory 
-                          ? 'bg-gray-900 text-white border-gray-900 shadow-lg' 
-                          : 'bg-white text-gray-400 border-gray-100 hover:border-gray-300'
+                          ? 'bg-gray-950 dark:bg-white text-white dark:text-gray-950 border-gray-950 dark:border-white shadow-lg' 
+                          : 'bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-600'
                       }`}
                     >
                       All
@@ -317,10 +428,10 @@ export default function POSPage() {
                       <button
                         key={cat}
                         onClick={() => setSelectedCategory(cat)}
-                        className={`px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all whitespace-nowrap border ${
+                        className={`px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all whitespace-nowrap border cursor-pointer ${
                           selectedCategory === cat
-                            ? 'bg-gray-900 text-white border-gray-900 shadow-lg' 
-                            : 'bg-white text-gray-400 border-gray-100 hover:border-gray-300'
+                            ? 'bg-gray-950 dark:bg-white text-white dark:text-gray-950 border-gray-950 dark:border-white shadow-lg' 
+                            : 'bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-600'
                         }`}
                       >
                         {cat}
@@ -331,14 +442,15 @@ export default function POSPage() {
               </div>
   
               {filteredProducts.length === 0 ? (
-                <div className="text-center py-32 bg-white rounded-[3rem] border border-dashed border-gray-200 shadow-inner">
-                  <PackageOpen className="w-20 h-20 text-gray-200 mx-auto mb-6" />
-                  <h3 className="text-xl font-bold text-gray-900 uppercase tracking-tight">No products found</h3>
-                  <p className="text-gray-400 mt-2 font-medium">Try searching for something else or add a new product.</p>
+                <div className="text-center py-32 bg-white dark:bg-gray-900 rounded-[3rem] border border-dashed border-gray-200 dark:border-gray-800 shadow-inner">
+                  <PackageOpen className="w-20 h-20 text-gray-300 dark:text-gray-600 mx-auto mb-6" />
+                  <h3 className="text-xl font-black text-gray-900 dark:text-white uppercase tracking-tight">No products found</h3>
+                  <p className="text-gray-600 dark:text-gray-400 mt-2 font-medium">Try searching for something else or add a new product.</p>
                 </div>
               ) : (
                 <div className="space-y-6 pb-24 lg:pb-0">
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {/* 5 columns x 4 rows POS Product Display Grid */}
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3.5 sm:gap-4">
                     {visibleProducts.map((product) => (
                       <ProductCard 
                         key={product.id} 
@@ -348,15 +460,59 @@ export default function POSPage() {
                     ))}
                   </div>
 
-                  {filteredProducts.length > displayLimit && (
-                    <div className="text-center py-4">
-                      <button
-                        type="button"
-                        onClick={() => setDisplayLimit(prev => prev + 36)}
-                        className="px-8 py-3.5 bg-white hover:bg-gray-100 border border-gray-200 rounded-2xl text-xs font-black uppercase tracking-widest text-gray-800 shadow-sm transition-all active:scale-95"
-                      >
-                        Show more ({filteredProducts.length - displayLimit} more items)
-                      </button>
+                  {/* 5x4 Pagination Controls */}
+                  {totalPages > 1 && (
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 pb-4 border-t border-gray-200 dark:border-gray-800">
+                      <div className="text-xs font-black uppercase tracking-wider text-gray-700 dark:text-gray-300">
+                        Showing <span className="text-orange-600 dark:text-orange-400 font-black">{(currentPage - 1) * POS_ITEMS_PER_PAGE + 1} - {Math.min(currentPage * POS_ITEMS_PER_PAGE, filteredProducts.length)}</span> of <span className="text-gray-950 dark:text-white font-black">{filteredProducts.length}</span> products · <span className="text-gray-500 dark:text-gray-400 font-bold">5×4 Display (Page {currentPage} of {totalPages})</span>
+                      </div>
+
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          type="button"
+                          disabled={currentPage === 1}
+                          onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                          className="px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed text-gray-800 dark:text-gray-200 rounded-xl font-black text-xs uppercase flex items-center gap-1 cursor-pointer transition-all shadow-2xs"
+                        >
+                          <ChevronLeft className="w-4 h-4" />
+                          <span className="hidden sm:inline">Prev</span>
+                        </button>
+
+                        <div className="flex items-center gap-1">
+                          {Array.from({ length: totalPages }, (_, i) => i + 1)
+                            .filter(p => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 2)
+                            .map((pageNum, idx, arr) => {
+                              const prev = arr[idx - 1];
+                              const showEllipsis = prev && pageNum - prev > 1;
+                              return (
+                                <React.Fragment key={pageNum}>
+                                  {showEllipsis && <span className="px-1 text-gray-400 font-black">...</span>}
+                                  <button
+                                    type="button"
+                                    onClick={() => setCurrentPage(pageNum)}
+                                    className={`min-w-9 h-9 px-2 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                                      currentPage === pageNum
+                                        ? 'bg-orange-600 text-white shadow-md'
+                                        : 'bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-300 dark:border-gray-700'
+                                    }`}
+                                  >
+                                    {pageNum}
+                                  </button>
+                                </React.Fragment>
+                              );
+                            })}
+                        </div>
+
+                        <button
+                          type="button"
+                          disabled={currentPage === totalPages}
+                          onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                          className="px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed text-gray-800 dark:text-gray-200 rounded-xl font-black text-xs uppercase flex items-center gap-1 cursor-pointer transition-all shadow-2xs"
+                        >
+                          <span className="hidden sm:inline">Next</span>
+                          <ChevronRight className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -365,18 +521,18 @@ export default function POSPage() {
           </div>
   
           {/* Desktop Cart Sidebar */}
-          <div className="hidden lg:flex w-[450px] bg-white border-l border-gray-100 flex-col shadow-2xl relative z-10">
-            <div className="p-8 border-b border-gray-50 flex items-center justify-between bg-gray-50/30">
+          <div className="hidden lg:flex w-[450px] bg-white dark:bg-gray-900 border-l border-gray-100 dark:border-gray-800 flex-col shadow-2xl relative z-10 transition-colors">
+            <div className="p-8 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gray-50/50 dark:bg-gray-800/40">
               <div className="flex items-center gap-4">
-                <div className="bg-orange-600 p-3 rounded-2xl text-white shadow-lg shadow-orange-100">
+                <div className="bg-orange-600 p-3 rounded-2xl text-white shadow-lg shadow-orange-100 dark:shadow-none">
                   <ShoppingCart className="w-6 h-6" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-black text-gray-900 tracking-tight uppercase">Cart</h3>
+                  <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight uppercase">Cart</h3>
                   <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Review items before checkout</p>
                 </div>
               </div>
-              <span className="bg-orange-100 text-orange-600 text-sm font-black px-4 py-1.5 rounded-full">
+              <span className="bg-orange-100 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400 text-sm font-black px-4 py-1.5 rounded-full">
                 {cart.reduce((acc, item) => acc + item.quantity, 0)} ITEMS
               </span>
             </div>
@@ -387,13 +543,13 @@ export default function POSPage() {
                   <motion.div 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="h-full flex flex-col items-center justify-center text-center text-gray-300"
+                    className="h-full flex flex-col items-center justify-center text-center text-gray-300 dark:text-gray-600"
                   >
-                    <div className="bg-gray-50 p-8 rounded-[3rem] mb-6">
+                    <div className="bg-gray-50 dark:bg-gray-800/60 p-8 rounded-[3rem] mb-6">
                       <ShoppingCart className="w-16 h-16 opacity-20" />
                     </div>
-                    <p className="font-black text-xl text-gray-400 uppercase tracking-tight">Cart is empty</p>
-                    <p className="text-sm mt-2 max-w-[200px] mx-auto">Select products from the grid to start a transaction</p>
+                    <p className="font-black text-xl text-gray-400 dark:text-gray-500 uppercase tracking-tight">Cart is empty</p>
+                    <p className="text-sm mt-2 max-w-[200px] mx-auto text-gray-400 dark:text-gray-500">Select products from the grid to start a transaction</p>
                   </motion.div>
                 ) : (
                   cart.map((item) => (
@@ -401,6 +557,7 @@ export default function POSPage() {
                       key={item.productId} 
                       item={item} 
                       onUpdateQuantity={updateQuantity} 
+                      onSetQuantity={setItemQuantity}
                       onRemove={removeFromCart} 
                     />
                   ))
@@ -422,13 +579,13 @@ export default function POSPage() {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowCartMobile(true)}
-              className="w-full bg-gray-900 text-white p-6 rounded-[2rem] flex items-center justify-between shadow-2xl shadow-gray-400"
+              className="w-full bg-gray-900 dark:bg-gray-800 text-white p-6 rounded-[2rem] flex items-center justify-between shadow-2xl shadow-gray-400 dark:shadow-black/60 border border-transparent dark:border-gray-700 cursor-pointer"
             >
               <div className="flex items-center gap-4">
                 <div className="relative">
                   <ShoppingCart className="w-6 h-6" />
                   {cart.length > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-orange-600 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-gray-900">
+                    <span className="absolute -top-2 -right-2 bg-orange-600 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-gray-900 dark:border-gray-800">
                       {cart.reduce((acc, item) => acc + item.quantity, 0)}
                     </span>
                   )}
@@ -453,13 +610,13 @@ export default function POSPage() {
                   animate={{ y: 0 }}
                   exit={{ y: '100%' }}
                   transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                  className="bg-white rounded-t-[3rem] max-h-[90vh] flex flex-col shadow-2xl"
+                  className="bg-white dark:bg-gray-900 rounded-t-[3rem] max-h-[90vh] flex flex-col shadow-2xl border-t border-gray-100 dark:border-gray-800"
                 >
-                  <div className="p-8 border-b border-gray-100 flex items-center justify-between">
-                    <h3 className="text-2xl font-black text-gray-900 tracking-tight uppercase">Your Cart</h3>
+                  <div className="p-8 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+                    <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight uppercase">Your Cart</h3>
                     <button 
                       onClick={() => setShowCartMobile(false)}
-                      className="p-3 bg-gray-100 rounded-2xl text-gray-500"
+                      className="p-3 bg-gray-100 dark:bg-gray-800 rounded-2xl text-gray-500 dark:text-gray-400 cursor-pointer"
                     >
                       <X className="w-6 h-6" />
                     </button>
@@ -467,7 +624,7 @@ export default function POSPage() {
                   
                   <div className="flex-1 overflow-y-auto p-6 space-y-4">
                     {cart.length === 0 ? (
-                      <div className="py-20 text-center text-gray-400">
+                      <div className="py-20 text-center text-gray-400 dark:text-gray-500">
                         <ShoppingCart className="w-12 h-12 mx-auto mb-4 opacity-20" />
                         <p className="font-bold uppercase tracking-widest">Cart is empty</p>
                       </div>
@@ -477,6 +634,7 @@ export default function POSPage() {
                           key={item.productId} 
                           item={item} 
                           onUpdateQuantity={updateQuantity} 
+                          onSetQuantity={setItemQuantity}
                           onRemove={removeFromCart} 
                         />
                       ))
@@ -498,6 +656,20 @@ export default function POSPage() {
           </AnimatePresence>
         </div>
   
+        {/* Checkout Modal */}
+        <AnimatePresence>
+          {isCheckoutModalOpen && (
+            <CheckoutModal
+              total={total}
+              itemCount={cart.reduce((acc, item) => acc + item.quantity, 0)}
+              customers={customers}
+              onAddCustomer={handleAddNewCustomerInline}
+              onConfirm={handleConfirmCheckout}
+              onClose={() => setIsCheckoutModalOpen(false)}
+            />
+          )}
+        </AnimatePresence>
+
         <SuccessOverlay 
           show={showSuccess} 
           onClose={() => setShowSuccess(false)}

@@ -84,20 +84,20 @@ export default function ReportsPage() {
 
   if (!currentBranchId) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col font-sans transition-colors">
         <Header />
         <div className="flex-1 flex items-center justify-center p-6">
-          <div className="max-w-md w-full bg-white rounded-[3rem] p-12 text-center border border-gray-100 shadow-xl shadow-gray-200/50">
-            <div className="w-24 h-24 bg-red-50 rounded-[2.5rem] flex items-center justify-center mx-auto mb-8 text-red-600">
+          <div className="max-w-md w-full bg-white dark:bg-gray-900 rounded-[3rem] p-12 text-center border border-gray-100 dark:border-gray-800 shadow-xl shadow-gray-200/50 dark:shadow-none">
+            <div className="w-24 h-24 bg-red-50 dark:bg-rose-950/40 rounded-[2.5rem] flex items-center justify-center mx-auto mb-8 text-red-600 dark:text-red-400">
               <BarChart3 className="w-12 h-12" />
             </div>
-            <h2 className="text-3xl font-black text-gray-900 tracking-tight uppercase mb-4">No Branch Access</h2>
-            <p className="text-gray-500 font-medium leading-relaxed mb-8">
+            <h2 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight uppercase mb-4">No Branch Access</h2>
+            <p className="text-gray-500 dark:text-gray-400 font-medium leading-relaxed mb-8">
               You haven&apos;t been assigned to any branches yet. Please contact your administrator to get access.
             </p>
             <Link 
               href="/"
-              className="inline-flex items-center gap-3 px-8 py-4 bg-gray-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-black transition-all"
+              className="inline-flex items-center gap-3 px-8 py-4 bg-gray-900 dark:bg-gray-800 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-black dark:hover:bg-gray-700 transition-all"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Dashboard
@@ -110,17 +110,17 @@ export default function ReportsPage() {
 
   if (isCashier) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6 text-center">
-        <div className="bg-red-100 p-6 rounded-[2.5rem] mb-8 text-red-600 shadow-xl shadow-red-100">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-950 p-6 text-center transition-colors">
+        <div className="bg-red-100 dark:bg-red-950/60 p-6 rounded-[2.5rem] mb-8 text-red-600 dark:text-red-400 shadow-xl shadow-red-100 dark:shadow-none">
           <ShieldAlert className="w-16 h-16" />
         </div>
-        <h2 className="text-4xl font-black text-gray-900 mb-4 tracking-tighter">Access Denied</h2>
-        <p className="text-xl text-gray-500 font-medium mb-12 max-w-md">
+        <h2 className="text-4xl font-black text-gray-900 dark:text-white mb-4 tracking-tighter">Access Denied</h2>
+        <p className="text-xl text-gray-500 dark:text-gray-400 font-medium mb-12 max-w-md">
           You do not have permission to view reports. Please contact your administrator.
         </p>
         <Link 
           href="/"
-          className="bg-gray-900 text-white font-black px-12 py-6 rounded-[2rem] shadow-2xl hover:bg-black transition-all active:scale-95 uppercase tracking-widest text-sm"
+          className="bg-gray-900 dark:bg-gray-800 text-white font-black px-12 py-6 rounded-[2rem] shadow-2xl hover:bg-black dark:hover:bg-gray-700 transition-all active:scale-95 uppercase tracking-widest text-sm"
         >
           Return to Dashboard
         </Link>
@@ -130,7 +130,7 @@ export default function ReportsPage() {
 
   return (
     <AuthGuard>
-      <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col font-sans transition-colors">
         <Header />
         
         <div className="flex-1 p-6 md:p-12 overflow-y-auto">

@@ -10,6 +10,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { pullSync, processQueue } from '@/lib/db/sync-queue';
 import { PWAInstallButton } from '@/components/pwa/pwa-install-button';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 export function Header({ ticketNumber }: { ticketNumber?: string }) {
   const { store } = useStore();
@@ -52,27 +53,27 @@ export function Header({ ticketNumber }: { ticketNumber?: string }) {
   };
 
   return (
-    <header className="border-b bg-white/80 backdrop-blur-md px-4 md:px-8 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+    <header className="border-b bg-white/80 dark:bg-gray-900/90 dark:border-gray-800 backdrop-blur-md px-4 md:px-8 py-4 flex items-center justify-between sticky top-0 z-50 shadow-xs transition-colors">
       <motion.div 
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         className="flex items-center gap-4"
       >
-        <div className="bg-orange-600 p-3 rounded-2xl shadow-lg shadow-orange-200">
+        <div className="bg-orange-600 p-3 rounded-2xl shadow-lg shadow-orange-200 dark:shadow-none">
           <Store className="text-white w-6 h-6" />
         </div>
         <div>
-          <h1 className="font-black text-xl md:text-2xl tracking-tight text-gray-900 leading-tight">
+          <h1 className="font-black text-xl md:text-2xl tracking-tight text-gray-900 dark:text-white leading-tight">
             {store?.name || 'Sari-Sari POS'}
           </h1>
           <div className="flex items-center gap-3 mt-0.5">
-            <div className="flex items-center gap-1 text-[10px] font-black text-gray-400 uppercase tracking-widest">
+            <div className="flex items-center gap-1 text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">
               <Clock className="w-3 h-3" />
               {new Date().toLocaleTimeString('en-PH', { hour: '2-digit', minute: '2-digit' })}
             </div>
             {ticketNumber && (
-              <div className="flex items-center gap-1 text-[10px] font-black text-orange-600 uppercase tracking-widest">
-                <span className="w-1 h-1 bg-orange-600 rounded-full" />
+              <div className="flex items-center gap-1 text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-widest">
+                <span className="w-1 h-1 bg-orange-600 dark:bg-orange-400 rounded-full" />
                 Ticket: {ticketNumber}
               </div>
             )}
@@ -80,7 +81,10 @@ export function Header({ ticketNumber }: { ticketNumber?: string }) {
         </div>
       </motion.div>
       
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
+        {/* Dark Theme Toggle */}
+        <ThemeToggle variant="header" showLabel={true} />
+
         {/* PWA Install Button */}
         <PWAInstallButton variant="header" />
 
@@ -90,12 +94,12 @@ export function Header({ ticketNumber }: { ticketNumber?: string }) {
           disabled={isSyncing}
           className={`flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-2xl border transition-all cursor-pointer ${
             isSyncing 
-              ? 'bg-orange-50 border-orange-200 text-orange-600 animate-pulse'
+              ? 'bg-orange-50 dark:bg-orange-950/40 border-orange-200 dark:border-orange-800 text-orange-600 dark:text-orange-400 animate-pulse'
               : syncSuccess
-              ? 'bg-green-50 border-green-200 text-green-600'
+              ? 'bg-green-50 dark:bg-emerald-950/40 border-green-200 dark:border-emerald-800 text-green-600 dark:text-emerald-400'
               : hasSyncError
-              ? 'bg-rose-50 border-rose-200 text-rose-600 animate-pulse'
-              : 'bg-white hover:bg-gray-50 border-gray-100 text-gray-700 shadow-sm'
+              ? 'bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800 text-rose-600 dark:text-rose-400 animate-pulse'
+              : 'bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 border-gray-100 dark:border-gray-700 text-gray-700 dark:text-gray-200 shadow-xs'
           }`}
           title={hasSyncError ? "Firebase rules are blocking sync. Click to retry." : "Synchronize data with Firebase Realtime Database"}
         >
@@ -113,14 +117,14 @@ export function Header({ ticketNumber }: { ticketNumber?: string }) {
         <div className="relative">
           <button 
             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-            className="flex items-center gap-2 px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-2xl border border-gray-100 transition-all group"
+            className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-2xl border border-gray-100 dark:border-gray-700 transition-all group cursor-pointer"
           >
-            <div className={`p-1.5 rounded-lg ${user?.role === 'admin' ? 'bg-purple-100 text-purple-600' : 'bg-blue-100 text-blue-600'}`}>
+            <div className={`p-1.5 rounded-lg ${user?.role === 'admin' ? 'bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-300' : 'bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300'}`}>
               <UserCircle className="w-4 h-4" />
             </div>
             <div className="text-left hidden sm:block">
-              <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest leading-none mb-0.5">{user?.role}</p>
-              <p className="text-xs font-bold text-gray-900 uppercase tracking-tight truncate max-w-[100px]">{user?.email}</p>
+              <p className="text-[8px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest leading-none mb-0.5">{user?.role}</p>
+              <p className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-tight truncate max-w-[100px]">{user?.email}</p>
             </div>
             <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isUserMenuOpen ? 'rotate-180' : ''}`} />
           </button>
@@ -136,32 +140,37 @@ export function Header({ ticketNumber }: { ticketNumber?: string }) {
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-2xl border border-gray-100 p-2 z-50 overflow-hidden"
+                  className="absolute right-0 mt-2 w-52 bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-800 p-2 z-50 overflow-hidden text-gray-900 dark:text-gray-100"
                 >
-                  <div className="p-3 border-b border-gray-50 mb-1">
-                    <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest mb-1">Logged in as</p>
-                    <p className="text-xs font-bold text-gray-900 truncate">{user?.email}</p>
+                  <div className="p-3 border-b border-gray-50 dark:border-gray-800 mb-1">
+                    <p className="text-[8px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">Logged in as</p>
+                    <p className="text-xs font-bold text-gray-900 dark:text-white truncate">{user?.email}</p>
                   </div>
                   {isAdmin && (
                     <Link
                       href="/admin/users"
                       onClick={() => setIsUserMenuOpen(false)}
-                      className="w-full flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-blue-50 text-blue-600"
+                      className="w-full flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-blue-50 dark:hover:bg-blue-950/40 text-blue-600 dark:text-blue-400"
                     >
-                      <div className="p-1.5 rounded-lg bg-blue-100">
+                      <div className="p-1.5 rounded-lg bg-blue-100 dark:bg-blue-900/50">
                         <UserCircle className="w-4 h-4" />
                       </div>
                       <span className="font-bold text-sm">Manage Users</span>
                     </Link>
                   )}
+
+                  <div className="border-t border-gray-100 dark:border-gray-800 my-1 pt-1">
+                    <ThemeToggle variant="dropdown-item" />
+                  </div>
+
                   <button
                     onClick={() => {
                       logout();
                       setIsUserMenuOpen(false);
                     }}
-                    className="w-full flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-red-50 text-red-600"
+                    className="w-full flex items-center gap-3 p-3 rounded-xl transition-all hover:bg-red-50 dark:hover:bg-red-950/40 text-red-600 dark:text-red-400 cursor-pointer"
                   >
-                    <div className="p-1.5 rounded-lg bg-red-100">
+                    <div className="p-1.5 rounded-lg bg-red-100 dark:bg-red-900/50">
                       <LogOut className="w-4 h-4" />
                     </div>
                     <span className="font-bold text-sm">Logout</span>
@@ -175,10 +184,10 @@ export function Header({ ticketNumber }: { ticketNumber?: string }) {
         <BranchSelector onManageBranches={() => setIsManagingBranches(true)} />
         
         <div className="hidden lg:flex flex-col text-right">
-          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5">
+          <p className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-0.5">
             Current Date
           </p>
-          <p className="text-sm font-bold text-gray-900">
+          <p className="text-sm font-bold text-gray-900 dark:text-white">
             {new Date().toLocaleDateString('en-PH', { dateStyle: 'medium' })}
           </p>
         </div>

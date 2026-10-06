@@ -1,1 +1,64 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  html {
+    min-height: 100%;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    background-color: #f9fafb;
+    color: #111827;
+  }
+  
+  html.dark {
+    color-scheme: dark;
+    background-color: #030712;
+    color: #f8fafc;
+  }
+
+  body {
+    min-height: 100vh;
+    background-color: #f9fafb;
+    color: #111827;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  html.dark body,
+  html.dark #root {
+    background-color: #030712 !important;
+    color: #f8fafc !important;
+  }
+
+  /* Ensure inputs and placeholders have high contrast in dark mode */
+  .dark input::placeholder,
+  .dark textarea::placeholder {
+    color: #94a3b8;
+  }
+
+  @media print {
+    body * {
+      visibility: hidden;
+    }
+    #printable-receipt,
+    #printable-receipt * {
+      visibility: visible;
+    }
+    #printable-receipt {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 80mm;
+      margin: 0;
+      padding: 0;
+      background: white !important;
+      color: black !important;
+      box-shadow: none !important;
+      border: none !important;
+      visibility: visible !important;
+    }
+    @page {
+      size: 80mm auto;
+      margin: 0;
+    }
+  }
+}

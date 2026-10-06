@@ -16,6 +16,20 @@ interface ReceiptData {
   vatAmount?: number;
   taxType?: 'VAT' | 'NON-VAT';
   paymentMethod: string;
+  amountPaid?: number;
+  change?: number;
+  customerName?: string;
+  splitBreakdown?: {
+    method: string;
+    amount: number;
+    reference?: string;
+    customerName?: string;
+  }[];
+  paymentDetails?: {
+    referenceNumber?: string;
+    bankName?: string;
+    notes?: string;
+  };
   type?: 'sales' | 'ewallet';
   ewalletDetails?: {
     type: string;

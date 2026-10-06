@@ -47,6 +47,19 @@ export function useCart() {
     );
   }, []);
 
+  const setItemQuantity = useCallback((productId: string, quantity: number) => {
+    const validQty = Math.max(0, Math.floor(quantity));
+    setCart((prev) =>
+      prev
+        .map((item) =>
+          item.productId === productId
+            ? { ...item, quantity: validQty }
+            : item
+        )
+        .filter((item) => item.quantity > 0)
+    );
+  }, []);
+
   const clearCart = useCallback(() => {
     setCart([]);
   }, []);
@@ -58,6 +71,7 @@ export function useCart() {
     addToCart,
     removeFromCart,
     updateQuantity,
+    setItemQuantity,
     clearCart,
     total,
   };

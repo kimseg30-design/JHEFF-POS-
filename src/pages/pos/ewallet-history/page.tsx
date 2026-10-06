@@ -57,7 +57,7 @@ export default function EWalletHistoryPage() {
   }, [filteredTransactions]);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col font-sans transition-colors">
       <Header />
       
       <div className="flex-1 p-4 md:p-8 overflow-y-auto">
