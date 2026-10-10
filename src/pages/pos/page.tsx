@@ -32,9 +32,7 @@ import {
   MapPin,
   ChevronLeft,
   ChevronRight,
-  ChevronDown,
-  Tag,
-  Check
+  ChevronDown
 } from 'lucide-react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
@@ -448,72 +446,12 @@ export default function POSPage() {
                   </div>
                 </div>
 
-                {/* Quick Category Filter Bar & Active Filter Chips */}
-                <div className="flex flex-col gap-3">
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2">
-                      <Tag className="w-4 h-4 text-gray-700 dark:text-gray-300 stroke-[2.5]" />
-                      <span className="text-xs font-black uppercase tracking-wider text-gray-800 dark:text-gray-200">
-                        Category Filters:
-                      </span>
-                    </div>
-
-                    {(selectedCategory || searchQuery) && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSelectedCategory(null);
-                          setSearchQuery('');
-                        }}
-                        className="text-xs font-black text-rose-700 dark:text-rose-400 hover:text-rose-950 dark:hover:text-rose-200 bg-rose-50 dark:bg-rose-950/60 px-3 py-1.5 rounded-xl border border-rose-200 dark:border-rose-800 flex items-center gap-1.5 cursor-pointer transition-colors"
-                      >
-                        <X className="w-3.5 h-3.5 stroke-[3]" />
-                        Reset All Filters
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Category Pills with High Contrast */}
-                  <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                    <button
-                      type="button"
-                      onClick={() => setSelectedCategory(null)}
-                      className={`px-5 py-3 rounded-2xl font-black text-xs uppercase tracking-wider transition-all whitespace-nowrap border-2 cursor-pointer ${
-                        !selectedCategory 
-                          ? 'bg-orange-600 dark:bg-orange-500 text-white border-orange-600 dark:border-orange-500 shadow-md' 
-                          : 'bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 hover:border-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 shadow-2xs'
-                      }`}
-                    >
-                      All ({products.length})
-                    </button>
-                    {categories.map(cat => (
-                      <button
-                        key={cat}
-                        type="button"
-                        onClick={() => setSelectedCategory(cat)}
-                        className={`px-5 py-3 rounded-2xl font-black text-xs uppercase tracking-wider transition-all whitespace-nowrap border-2 cursor-pointer flex items-center gap-2 ${
-                          selectedCategory === cat
-                            ? 'bg-orange-600 dark:bg-orange-500 text-white border-orange-600 dark:border-orange-500 shadow-md' 
-                            : 'bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 hover:border-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 shadow-2xs'
-                        }`}
-                      >
-                        <span>{cat}</span>
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
-                          selectedCategory === cat 
-                            ? 'bg-white text-orange-600 dark:bg-white dark:text-orange-600' 
-                            : 'bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white'
-                        }`}>
-                          {categoryCounts[cat] || 0}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Active Filtering Info Badge */}
-                  {(selectedCategory || deferredSearch) && (
-                    <div className="flex items-center gap-2 flex-wrap pt-1">
+                {/* Active Filter Feedback & Reset (Only shown when filtered) */}
+                {(selectedCategory || deferredSearch) && (
+                  <div className="flex items-center justify-between gap-3 bg-white dark:bg-gray-900 px-5 py-3.5 rounded-2xl border-2 border-gray-200 dark:border-gray-800 shadow-xs">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-xs font-black text-gray-800 dark:text-gray-200 uppercase tracking-wider">
-                        Active Filters:
+                        Active Filter:
                       </span>
                       {selectedCategory && (
                         <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-orange-100 dark:bg-orange-950/90 text-orange-950 dark:text-orange-200 border border-orange-300 dark:border-orange-800 rounded-full text-xs font-black">
@@ -541,12 +479,24 @@ export default function POSPage() {
                           </button>
                         </span>
                       )}
-                      <span className="text-xs font-black text-gray-700 dark:text-gray-300 ml-auto">
-                        Found <span className="text-orange-600 dark:text-orange-400">{filteredProducts.length}</span> matching products
+                      <span className="text-xs font-black text-gray-700 dark:text-gray-300 ml-1">
+                        ({filteredProducts.length} items found)
                       </span>
                     </div>
-                  )}
-                </div>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedCategory(null);
+                        setSearchQuery('');
+                      }}
+                      className="text-xs font-black text-rose-700 dark:text-rose-400 hover:text-rose-950 dark:hover:text-rose-200 bg-rose-50 dark:bg-rose-950/60 px-3.5 py-1.5 rounded-xl border border-rose-200 dark:border-rose-800 flex items-center gap-1.5 cursor-pointer transition-colors shrink-0"
+                    >
+                      <X className="w-3.5 h-3.5 stroke-[3]" />
+                      Reset All
+                    </button>
+                  </div>
+                )}
               </div>
   
               {filteredProducts.length === 0 ? (

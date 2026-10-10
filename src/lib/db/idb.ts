@@ -29,6 +29,7 @@ export type Product = {
   price: number;
   cost: number; // Added for profit tracking
   stock: number;
+  minStock?: number; // Optional custom low stock threshold
   category: string;
   branchId: string; // Reference to Branch
   barcode?: string;

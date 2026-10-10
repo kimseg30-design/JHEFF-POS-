@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Product } from '@/lib/db/idb';
-import { X, Save, Package, Tag, Hash, Coins, MapPin } from 'lucide-react';
+import { X, Save, Package, Tag, Hash, Coins, MapPin, AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 import { useBranches } from '@/lib/hooks/use-branches';
@@ -20,6 +20,7 @@ export function ProductForm({ product, onSave, onClose }: ProductFormProps) {
     price: '',
     cost: '',
     stock: '',
+    minStock: '',
     category: '',
     barcode: '',
     branchId: '',
@@ -33,12 +34,13 @@ export function ProductForm({ product, onSave, onClose }: ProductFormProps) {
         price: product.price.toString(),
         cost: (product.cost || 0).toString(),
         stock: product.stock.toString(),
+        minStock: product.minStock !== undefined ? product.minStock.toString() : '',
         category: product.category,
         barcode: product.barcode || '',
         branchId: product.branchId,
       });
     } else if (currentBranchId) {
-      setFormData(prev => ({ ...prev, branchId: currentBranchId }));
+      setFormData(prev => ({ ...prev, branchId: currentBranchId, minStock: '' }));
     }
   }, [product, currentBranchId]);
 
@@ -55,6 +57,7 @@ export function ProductForm({ product, onSave, onClose }: ProductFormProps) {
         price: parseFloat(formData.price),
         cost: parseFloat(formData.cost) || 0,
         stock: parseInt(formData.stock),
+        minStock: formData.minStock ? parseInt(formData.minStock, 10) : undefined,
       };
       if (product?.id) {
         await onSave({ ...data, id: product.id, createdAt: product.createdAt });
@@ -178,7 +181,7 @@ export function ProductForm({ product, onSave, onClose }: ProductFormProps) {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label className="flex items-center gap-2 text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-widest mb-2">
                   <Hash className="w-3.5 h-3.5 text-blue-500" /> Stock Qty
@@ -189,6 +192,18 @@ export function ProductForm({ product, onSave, onClose }: ProductFormProps) {
                   value={formData.stock}
                   onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
                   placeholder="0"
+                  className="w-full px-4 py-3.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-950 dark:text-white font-bold focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                />
+              </div>
+              <div>
+                <label className="flex items-center gap-2 text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-widest mb-2">
+                  <AlertTriangle className="w-3.5 h-3.5 text-amber-500" /> Min Stock Alert
+                </label>
+                <input
+                  type="number"
+                  value={formData.minStock}
+                  onChange={(e) => setFormData({ ...formData, minStock: e.target.value })}
+                  placeholder="e.g. 10"
                   className="w-full px-4 py-3.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-950 dark:text-white font-bold focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500"
                 />
               </div>
