@@ -31,7 +31,10 @@ import {
   Wallet,
   MapPin,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  ChevronDown,
+  Tag,
+  Check
 } from 'lucide-react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
@@ -90,6 +93,16 @@ export default function POSPage() {
   const categories = useMemo(() => {
     const cats = Array.from(new Set(products.map(p => p.category)));
     return cats.sort();
+  }, [products]);
+
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const p of products) {
+      if (p.category) {
+        counts[p.category] = (counts[p.category] || 0) + 1;
+      }
+    }
+    return counts;
   }, [products]);
 
   const filteredProducts = useMemo(() => {
@@ -343,21 +356,22 @@ export default function POSPage() {
                   <div className="flex items-center gap-4">
                     <Link 
                       href="/"
-                      className="p-3 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-2xl transition-all text-gray-400 hover:text-gray-900 dark:hover:text-white border border-gray-100 dark:border-gray-800 shadow-sm"
+                      className="p-3 bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-2xl transition-all text-gray-800 hover:text-gray-950 dark:text-gray-200 dark:hover:text-white border-2 border-gray-300 dark:border-gray-700 shadow-sm"
+                      title="Back to Dashboard"
                     >
-                      <ArrowLeft className="w-6 h-6" />
+                      <ArrowLeft className="w-6 h-6 stroke-[2.5]" />
                     </Link>
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                        <h2 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight uppercase">Checkout</h2>
+                        <h2 className="text-3xl sm:text-4xl font-black text-gray-950 dark:text-white tracking-tight uppercase">Checkout</h2>
                         {currentBranch && (
-                          <span className="bg-orange-100 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5">
-                            <MapPin className="w-3 h-3" />
+                          <span className="bg-orange-100 dark:bg-orange-950/90 text-orange-950 dark:text-orange-200 border border-orange-300 dark:border-orange-800 px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-widest flex items-center gap-1.5 shadow-2xs">
+                            <MapPin className="w-3.5 h-3.5" />
                             {currentBranch.name}
                           </span>
                         )}
                       </div>
-                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Select items for transaction</p>
+                      <p className="text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-widest">Select items for transaction</p>
                     </div>
                   </div>
                   
@@ -365,34 +379,35 @@ export default function POSPage() {
                     <QuickAdd onAdd={handleQuickAdd} />
                     <button
                       onClick={() => setIsEWalletOpen(true)}
-                      className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-2xl transition-all text-white shadow-lg shadow-blue-100 dark:shadow-none font-black text-xs uppercase tracking-widest cursor-pointer"
+                      className="flex items-center gap-2 px-6 py-3.5 bg-blue-600 hover:bg-blue-700 active:scale-95 rounded-2xl transition-all text-white shadow-lg shadow-blue-500/20 font-black text-xs uppercase tracking-widest cursor-pointer"
                     >
                       <Wallet className="w-4 h-4" />
                       E-Wallet
                     </button>
                     <Link
                       href="/pos/history"
-                      className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-2xl transition-all text-gray-900 dark:text-white border border-gray-100 dark:border-gray-800 shadow-sm font-black text-xs uppercase tracking-widest"
+                      className="flex items-center gap-2 px-6 py-3.5 bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-2xl transition-all text-gray-950 dark:text-white border-2 border-gray-300 dark:border-gray-700 shadow-sm font-black text-xs uppercase tracking-widest"
                     >
-                      <History className="w-4 h-4" />
+                      <History className="w-4 h-4 stroke-[2.5]" />
                       History
                     </Link>
                   </div>
                 </div>
                 
-                <div className="flex flex-col md:flex-row gap-4">
-                  {/* Highly Accessible Search Input with Shortcut and Clear Button */}
-                  <div className="relative flex-1">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 w-5 h-5 pointer-events-none" />
+                {/* Enlarged Prominent Search Bar & Category Filter Selector */}
+                <div className="flex flex-col md:flex-row items-stretch gap-4">
+                  {/* Hero Enlarged Search Bar */}
+                  <div className="relative flex-1 group">
+                    <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-800 dark:text-gray-200 w-7 h-7 sm:w-8 sm:h-8 pointer-events-none stroke-[2.5]" />
                     <input
                       ref={searchInputRef}
                       type="text"
-                      placeholder="Search products or categories... (Press / to search)"
+                      placeholder="Search product name, barcode, or SKU... (Press / to search)"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-12 pr-20 py-4 bg-white dark:bg-gray-900 text-gray-950 dark:text-white rounded-[2rem] border-2 border-gray-300 dark:border-gray-700 shadow-sm focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none transition-all text-base sm:text-lg font-bold placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                      className="w-full h-16 sm:h-20 pl-16 sm:pl-18 pr-28 sm:pr-36 bg-white dark:bg-gray-900 text-gray-950 dark:text-white rounded-[2.5rem] border-2 sm:border-3 border-gray-400 dark:border-gray-600 shadow-sm focus:border-orange-600 dark:focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none transition-all text-base sm:text-xl md:text-2xl font-black placeholder:text-gray-500 dark:placeholder:text-gray-400"
                     />
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
+                    <div className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 flex items-center gap-2">
                       {searchQuery ? (
                         <button
                           type="button"
@@ -400,52 +415,160 @@ export default function POSPage() {
                             setSearchQuery('');
                             searchInputRef.current?.focus();
                           }}
-                          className="p-1.5 text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg cursor-pointer transition-colors"
+                          className="p-2 sm:p-2.5 text-gray-700 dark:text-gray-200 hover:text-gray-950 dark:hover:text-white bg-gray-200/80 dark:bg-gray-800 rounded-2xl cursor-pointer transition-colors shadow-2xs"
                           title="Clear search"
                         >
-                          <X className="w-4 h-4" />
+                          <X className="w-5 h-5 sm:w-6 sm:h-6 stroke-[3]" />
                         </button>
                       ) : (
-                        <kbd className="hidden sm:inline-flex items-center px-2 py-0.5 text-[11px] font-black text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-2xs">
-                          /
+                        <kbd className="hidden sm:inline-flex items-center px-3 py-1.5 text-xs font-black text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-700 rounded-xl shadow-xs">
+                          Press /
                         </kbd>
                       )}
                     </div>
                   </div>
-                  
-                  <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
+
+                  {/* Dedicated Category Filter Selector Dropdown */}
+                  <div className="relative shrink-0 w-full md:w-72 lg:w-80">
+                    <Filter className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-800 dark:text-gray-200 w-5 h-5 sm:w-6 sm:h-6 pointer-events-none stroke-[2.5]" />
+                    <select
+                      value={selectedCategory || ''}
+                      onChange={(e) => setSelectedCategory(e.target.value || null)}
+                      className="w-full h-16 sm:h-20 pl-14 sm:pl-16 pr-12 bg-white dark:bg-gray-900 text-gray-950 dark:text-white rounded-[2.5rem] border-2 sm:border-3 border-gray-400 dark:border-gray-600 shadow-sm focus:border-orange-600 dark:focus:border-orange-500 focus:ring-4 focus:ring-orange-500/20 outline-none transition-all text-sm sm:text-base md:text-lg font-black appearance-none cursor-pointer"
+                      aria-label="Filter products by category"
+                    >
+                      <option value="">All Categories ({products.length})</option>
+                      {categories.map((cat) => (
+                        <option key={cat} value={cat}>
+                          {cat} ({categoryCounts[cat] || 0})
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-800 dark:text-gray-200 w-6 h-6 pointer-events-none stroke-[2.5]" />
+                  </div>
+                </div>
+
+                {/* Quick Category Filter Bar & Active Filter Chips */}
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                      <Tag className="w-4 h-4 text-gray-700 dark:text-gray-300 stroke-[2.5]" />
+                      <span className="text-xs font-black uppercase tracking-wider text-gray-800 dark:text-gray-200">
+                        Category Filters:
+                      </span>
+                    </div>
+
+                    {(selectedCategory || searchQuery) && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedCategory(null);
+                          setSearchQuery('');
+                        }}
+                        className="text-xs font-black text-rose-700 dark:text-rose-400 hover:text-rose-950 dark:hover:text-rose-200 bg-rose-50 dark:bg-rose-950/60 px-3 py-1.5 rounded-xl border border-rose-200 dark:border-rose-800 flex items-center gap-1.5 cursor-pointer transition-colors"
+                      >
+                        <X className="w-3.5 h-3.5 stroke-[3]" />
+                        Reset All Filters
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Category Pills with High Contrast */}
+                  <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
                     <button
+                      type="button"
                       onClick={() => setSelectedCategory(null)}
-                      className={`px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all whitespace-nowrap border cursor-pointer ${
+                      className={`px-5 py-3 rounded-2xl font-black text-xs uppercase tracking-wider transition-all whitespace-nowrap border-2 cursor-pointer ${
                         !selectedCategory 
-                          ? 'bg-gray-950 dark:bg-white text-white dark:text-gray-950 border-gray-950 dark:border-white shadow-lg' 
-                          : 'bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-600'
+                          ? 'bg-orange-600 dark:bg-orange-500 text-white border-orange-600 dark:border-orange-500 shadow-md' 
+                          : 'bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 hover:border-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 shadow-2xs'
                       }`}
                     >
-                      All
+                      All ({products.length})
                     </button>
                     {categories.map(cat => (
                       <button
                         key={cat}
+                        type="button"
                         onClick={() => setSelectedCategory(cat)}
-                        className={`px-6 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all whitespace-nowrap border cursor-pointer ${
+                        className={`px-5 py-3 rounded-2xl font-black text-xs uppercase tracking-wider transition-all whitespace-nowrap border-2 cursor-pointer flex items-center gap-2 ${
                           selectedCategory === cat
-                            ? 'bg-gray-950 dark:bg-white text-white dark:text-gray-950 border-gray-950 dark:border-white shadow-lg' 
-                            : 'bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-600'
+                            ? 'bg-orange-600 dark:bg-orange-500 text-white border-orange-600 dark:border-orange-500 shadow-md' 
+                            : 'bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700 hover:border-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 shadow-2xs'
                         }`}
                       >
-                        {cat}
+                        <span>{cat}</span>
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
+                          selectedCategory === cat 
+                            ? 'bg-white text-orange-600 dark:bg-white dark:text-orange-600' 
+                            : 'bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white'
+                        }`}>
+                          {categoryCounts[cat] || 0}
+                        </span>
                       </button>
                     ))}
                   </div>
+
+                  {/* Active Filtering Info Badge */}
+                  {(selectedCategory || deferredSearch) && (
+                    <div className="flex items-center gap-2 flex-wrap pt-1">
+                      <span className="text-xs font-black text-gray-800 dark:text-gray-200 uppercase tracking-wider">
+                        Active Filters:
+                      </span>
+                      {selectedCategory && (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-orange-100 dark:bg-orange-950/90 text-orange-950 dark:text-orange-200 border border-orange-300 dark:border-orange-800 rounded-full text-xs font-black">
+                          Category: {selectedCategory} ({categoryCounts[selectedCategory] || 0})
+                          <button
+                            type="button"
+                            onClick={() => setSelectedCategory(null)}
+                            className="hover:text-orange-700 dark:hover:text-white cursor-pointer ml-1"
+                            title="Clear category filter"
+                          >
+                            <X className="w-3.5 h-3.5 stroke-[3]" />
+                          </button>
+                        </span>
+                      )}
+                      {deferredSearch && (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-100 dark:bg-blue-950/90 text-blue-950 dark:text-blue-200 border border-blue-300 dark:border-blue-800 rounded-full text-xs font-black">
+                          Search: &quot;{deferredSearch}&quot;
+                          <button
+                            type="button"
+                            onClick={() => setSearchQuery('')}
+                            className="hover:text-blue-700 dark:hover:text-white cursor-pointer ml-1"
+                            title="Clear search query"
+                          >
+                            <X className="w-3.5 h-3.5 stroke-[3]" />
+                          </button>
+                        </span>
+                      )}
+                      <span className="text-xs font-black text-gray-700 dark:text-gray-300 ml-auto">
+                        Found <span className="text-orange-600 dark:text-orange-400">{filteredProducts.length}</span> matching products
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
   
               {filteredProducts.length === 0 ? (
-                <div className="text-center py-32 bg-white dark:bg-gray-900 rounded-[3rem] border border-dashed border-gray-200 dark:border-gray-800 shadow-inner">
-                  <PackageOpen className="w-20 h-20 text-gray-300 dark:text-gray-600 mx-auto mb-6" />
-                  <h3 className="text-xl font-black text-gray-900 dark:text-white uppercase tracking-tight">No products found</h3>
-                  <p className="text-gray-600 dark:text-gray-400 mt-2 font-medium">Try searching for something else or add a new product.</p>
+                <div className="text-center py-32 bg-white dark:bg-gray-900 rounded-[3rem] border-2 border-dashed border-gray-300 dark:border-gray-700 shadow-inner">
+                  <PackageOpen className="w-20 h-20 text-gray-500 dark:text-gray-400 mx-auto mb-6" />
+                  <h3 className="text-2xl font-black text-gray-950 dark:text-white uppercase tracking-tight">No products found</h3>
+                  <p className="text-gray-700 dark:text-gray-300 mt-2 font-bold max-w-md mx-auto">
+                    No items matched your current search or category filter. Try clearing filters to see all products.
+                  </p>
+                  {(selectedCategory || searchQuery) && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedCategory(null);
+                        setSearchQuery('');
+                      }}
+                      className="mt-6 px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-2xl font-black text-xs uppercase tracking-wider shadow-md transition-all cursor-pointer inline-flex items-center gap-2"
+                    >
+                      <X className="w-4 h-4 stroke-[3]" />
+                      Clear All Filters
+                    </button>
+                  )}
                 </div>
               ) : (
                 <div className="space-y-6 pb-24 lg:pb-0">
@@ -462,9 +585,9 @@ export default function POSPage() {
 
                   {/* 5x4 Pagination Controls */}
                   {totalPages > 1 && (
-                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 pb-4 border-t border-gray-200 dark:border-gray-800">
-                      <div className="text-xs font-black uppercase tracking-wider text-gray-700 dark:text-gray-300">
-                        Showing <span className="text-orange-600 dark:text-orange-400 font-black">{(currentPage - 1) * POS_ITEMS_PER_PAGE + 1} - {Math.min(currentPage * POS_ITEMS_PER_PAGE, filteredProducts.length)}</span> of <span className="text-gray-950 dark:text-white font-black">{filteredProducts.length}</span> products · <span className="text-gray-500 dark:text-gray-400 font-bold">5×4 Display (Page {currentPage} of {totalPages})</span>
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 pb-4 border-t-2 border-gray-200 dark:border-gray-800">
+                      <div className="text-xs font-black uppercase tracking-wider text-gray-800 dark:text-gray-200">
+                        Showing <span className="text-orange-600 dark:text-orange-400 font-black">{(currentPage - 1) * POS_ITEMS_PER_PAGE + 1} - {Math.min(currentPage * POS_ITEMS_PER_PAGE, filteredProducts.length)}</span> of <span className="text-gray-950 dark:text-white font-black">{filteredProducts.length}</span> products · <span className="text-gray-700 dark:text-gray-300 font-black">5×4 Display (Page {currentPage} of {totalPages})</span>
                       </div>
 
                       <div className="flex items-center gap-1.5">
@@ -472,9 +595,9 @@ export default function POSPage() {
                           type="button"
                           disabled={currentPage === 1}
                           onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                          className="px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed text-gray-800 dark:text-gray-200 rounded-xl font-black text-xs uppercase flex items-center gap-1 cursor-pointer transition-all shadow-2xs"
+                          className="px-4 py-2.5 bg-white dark:bg-gray-900 border-2 border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed text-gray-950 dark:text-white rounded-xl font-black text-xs uppercase flex items-center gap-1.5 cursor-pointer transition-all shadow-xs"
                         >
-                          <ChevronLeft className="w-4 h-4" />
+                          <ChevronLeft className="w-4 h-4 stroke-[3]" />
                           <span className="hidden sm:inline">Prev</span>
                         </button>
 
@@ -486,14 +609,14 @@ export default function POSPage() {
                               const showEllipsis = prev && pageNum - prev > 1;
                               return (
                                 <React.Fragment key={pageNum}>
-                                  {showEllipsis && <span className="px-1 text-gray-400 font-black">...</span>}
+                                  {showEllipsis && <span className="px-1 text-gray-600 dark:text-gray-400 font-black">...</span>}
                                   <button
                                     type="button"
                                     onClick={() => setCurrentPage(pageNum)}
                                     className={`min-w-9 h-9 px-2 rounded-xl text-xs font-black transition-all cursor-pointer ${
                                       currentPage === pageNum
-                                        ? 'bg-orange-600 text-white shadow-md'
-                                        : 'bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-300 dark:border-gray-700'
+                                        ? 'bg-orange-600 text-white shadow-md border-2 border-orange-600'
+                                        : 'bg-white dark:bg-gray-900 text-gray-950 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 border-2 border-gray-300 dark:border-gray-700'
                                     }`}
                                   >
                                     {pageNum}
@@ -507,10 +630,10 @@ export default function POSPage() {
                           type="button"
                           disabled={currentPage === totalPages}
                           onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                          className="px-3 py-2 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed text-gray-800 dark:text-gray-200 rounded-xl font-black text-xs uppercase flex items-center gap-1 cursor-pointer transition-all shadow-2xs"
+                          className="px-4 py-2.5 bg-white dark:bg-gray-900 border-2 border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed text-gray-950 dark:text-white rounded-xl font-black text-xs uppercase flex items-center gap-1.5 cursor-pointer transition-all shadow-xs"
                         >
                           <span className="hidden sm:inline">Next</span>
-                          <ChevronRight className="w-4 h-4" />
+                          <ChevronRight className="w-4 h-4 stroke-[3]" />
                         </button>
                       </div>
                     </div>
@@ -521,35 +644,35 @@ export default function POSPage() {
           </div>
   
           {/* Desktop Cart Sidebar */}
-          <div className="hidden lg:flex w-[450px] bg-white dark:bg-gray-900 border-l border-gray-100 dark:border-gray-800 flex-col shadow-2xl relative z-10 transition-colors">
-            <div className="p-8 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gray-50/50 dark:bg-gray-800/40">
+          <div className="hidden lg:flex w-[450px] bg-white dark:bg-gray-900 border-l-2 border-gray-200 dark:border-gray-800 flex-col shadow-2xl relative z-10 transition-colors">
+            <div className="p-8 border-b-2 border-gray-200 dark:border-gray-800 flex items-center justify-between bg-gray-50/80 dark:bg-gray-800/60">
               <div className="flex items-center gap-4">
-                <div className="bg-orange-600 p-3 rounded-2xl text-white shadow-lg shadow-orange-100 dark:shadow-none">
-                  <ShoppingCart className="w-6 h-6" />
+                <div className="bg-orange-600 p-3 rounded-2xl text-white shadow-lg shadow-orange-500/20 dark:shadow-none">
+                  <ShoppingCart className="w-6 h-6 stroke-[2.5]" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight uppercase">Cart</h3>
-                  <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Review items before checkout</p>
+                  <h3 className="text-2xl font-black text-gray-950 dark:text-white tracking-tight uppercase">Cart</h3>
+                  <p className="text-[11px] font-black text-gray-700 dark:text-gray-300 uppercase tracking-widest">Review items before checkout</p>
                 </div>
               </div>
-              <span className="bg-orange-100 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400 text-sm font-black px-4 py-1.5 rounded-full">
+              <span className="bg-orange-100 dark:bg-orange-950 text-orange-950 dark:text-orange-200 border border-orange-300 dark:border-orange-800 text-sm font-black px-4 py-1.5 rounded-full">
                 {cart.reduce((acc, item) => acc + item.quantity, 0)} ITEMS
               </span>
             </div>
   
-            <div className="flex-1 overflow-y-auto p-8 space-y-6">
+            <div className="flex-1 overflow-y-auto p-8 space-y-4">
               <AnimatePresence mode="popLayout">
                 {cart.length === 0 ? (
                   <motion.div 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="h-full flex flex-col items-center justify-center text-center text-gray-300 dark:text-gray-600"
+                    className="h-full flex flex-col items-center justify-center text-center text-gray-400 dark:text-gray-500 py-12"
                   >
-                    <div className="bg-gray-50 dark:bg-gray-800/60 p-8 rounded-[3rem] mb-6">
-                      <ShoppingCart className="w-16 h-16 opacity-20" />
+                    <div className="bg-gray-100 dark:bg-gray-800 p-8 rounded-[3rem] mb-6">
+                      <ShoppingCart className="w-16 h-16 opacity-30 text-gray-700 dark:text-gray-300 stroke-[2]" />
                     </div>
-                    <p className="font-black text-xl text-gray-400 dark:text-gray-500 uppercase tracking-tight">Cart is empty</p>
-                    <p className="text-sm mt-2 max-w-[200px] mx-auto text-gray-400 dark:text-gray-500">Select products from the grid to start a transaction</p>
+                    <p className="font-black text-xl text-gray-900 dark:text-white uppercase tracking-tight">Cart is empty</p>
+                    <p className="text-sm mt-2 max-w-[220px] mx-auto text-gray-700 dark:text-gray-300 font-bold">Select products from the grid to start a transaction</p>
                   </motion.div>
                 ) : (
                   cart.map((item) => (
@@ -579,13 +702,13 @@ export default function POSPage() {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowCartMobile(true)}
-              className="w-full bg-gray-900 dark:bg-gray-800 text-white p-6 rounded-[2rem] flex items-center justify-between shadow-2xl shadow-gray-400 dark:shadow-black/60 border border-transparent dark:border-gray-700 cursor-pointer"
+              className="w-full bg-gray-950 dark:bg-gray-800 text-white p-6 rounded-[2rem] flex items-center justify-between shadow-2xl shadow-gray-400 dark:shadow-black/60 border-2 border-gray-900 dark:border-gray-700 cursor-pointer"
             >
               <div className="flex items-center gap-4">
                 <div className="relative">
-                  <ShoppingCart className="w-6 h-6" />
+                  <ShoppingCart className="w-6 h-6 stroke-[2.5]" />
                   {cart.length > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-orange-600 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-gray-900 dark:border-gray-800">
+                    <span className="absolute -top-2 -right-2 bg-orange-600 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-gray-950 dark:border-gray-800">
                       {cart.reduce((acc, item) => acc + item.quantity, 0)}
                     </span>
                   )}
@@ -610,23 +733,24 @@ export default function POSPage() {
                   animate={{ y: 0 }}
                   exit={{ y: '100%' }}
                   transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                  className="bg-white dark:bg-gray-900 rounded-t-[3rem] max-h-[90vh] flex flex-col shadow-2xl border-t border-gray-100 dark:border-gray-800"
+                  className="bg-white dark:bg-gray-900 rounded-t-[3rem] max-h-[90vh] flex flex-col shadow-2xl border-t-2 border-gray-200 dark:border-gray-800"
                 >
-                  <div className="p-8 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
-                    <h3 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight uppercase">Your Cart</h3>
+                  <div className="p-8 border-b-2 border-gray-200 dark:border-gray-800 flex items-center justify-between">
+                    <h3 className="text-2xl font-black text-gray-950 dark:text-white tracking-tight uppercase">Your Cart</h3>
                     <button 
                       onClick={() => setShowCartMobile(false)}
-                      className="p-3 bg-gray-100 dark:bg-gray-800 rounded-2xl text-gray-500 dark:text-gray-400 cursor-pointer"
+                      className="p-3 bg-gray-100 dark:bg-gray-800 rounded-2xl text-gray-900 dark:text-white border-2 border-gray-300 dark:border-gray-700 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700"
                     >
-                      <X className="w-6 h-6" />
+                      <X className="w-6 h-6 stroke-[2.5]" />
                     </button>
                   </div>
                   
                   <div className="flex-1 overflow-y-auto p-6 space-y-4">
                     {cart.length === 0 ? (
                       <div className="py-20 text-center text-gray-400 dark:text-gray-500">
-                        <ShoppingCart className="w-12 h-12 mx-auto mb-4 opacity-20" />
-                        <p className="font-bold uppercase tracking-widest">Cart is empty</p>
+                        <ShoppingCart className="w-12 h-12 mx-auto mb-4 opacity-30 text-gray-700 dark:text-gray-300" />
+                        <p className="font-black text-gray-900 dark:text-white uppercase tracking-widest text-lg">Cart is empty</p>
+                        <p className="text-xs text-gray-700 dark:text-gray-300 font-bold mt-1">Select items to add them to your cart</p>
                       </div>
                     ) : (
                       cart.map((item) => (

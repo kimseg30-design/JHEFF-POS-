@@ -115,33 +115,35 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
       <motion.div
         initial={{ opacity: 0, scale: 0.96, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="bg-white w-full max-w-4xl rounded-[2.5rem] shadow-2xl overflow-hidden border border-gray-100 flex flex-col max-h-[92vh] my-auto"
+        className="bg-white dark:bg-gray-900 w-full max-w-4xl rounded-[2.5rem] shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-800 flex flex-col max-h-[92vh] my-auto transition-colors"
       >
         {/* Top Header */}
-        <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-gray-50/70">
+        <div className="px-6 py-5 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gray-50/70 dark:bg-gray-800/60">
           <div className="flex items-center gap-3">
-            <div className="bg-blue-600 p-2.5 rounded-2xl text-white shadow-md shadow-blue-200">
+            <div className="bg-blue-600 p-2.5 rounded-2xl text-white shadow-md shadow-blue-500/20">
               <History className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-xl font-black text-gray-900 tracking-tight">{customer.name}</h3>
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+              <h3 className="text-xl font-black text-gray-950 dark:text-white tracking-tight">{customer.name}</h3>
+              <p className="text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                 Cross-Matched Customer Ledger & Payment History
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <button
+              type="button"
               onClick={() => setShowPrintModal(true)}
-              className="hidden sm:flex items-center gap-1.5 px-3 py-2 bg-white hover:bg-gray-100 border border-gray-200 rounded-xl text-xs font-bold text-gray-700 transition-colors shadow-sm"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-2 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 rounded-xl text-xs font-bold text-gray-800 dark:text-gray-200 transition-colors shadow-sm cursor-pointer"
               title="Statement of Account"
             >
-              <Printer className="w-3.5 h-3.5 text-gray-500" />
+              <Printer className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400" />
               <span>Statement / SOA</span>
             </button>
             <button 
+              type="button"
               onClick={onClose} 
-              className="p-2 hover:bg-gray-200/80 rounded-full transition-colors text-gray-400 hover:text-gray-700"
+              className="p-2 hover:bg-gray-200/80 dark:hover:bg-gray-800 rounded-full transition-colors text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -149,49 +151,49 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
         </div>
 
         {/* KPI Metrics Summary Bar */}
-        <div className="p-6 bg-gradient-to-r from-gray-50 via-white to-gray-50 border-b border-gray-100">
+        <div className="p-6 bg-gray-50/60 dark:bg-gray-850 border-b border-gray-100 dark:border-gray-800">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Current Balance</p>
-              <p className={`text-2xl font-black ${customer.totalUtang > 0 ? 'text-red-600' : 'text-green-600'}`}>
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
+              <p className="text-[10px] font-black text-gray-600 dark:text-gray-300 uppercase tracking-widest mb-0.5">Current Balance</p>
+              <p className={`text-2xl font-black ${customer.totalUtang > 0 ? 'text-red-600 dark:text-rose-400' : 'text-green-600 dark:text-emerald-400'}`}>
                 ₱{customer.totalUtang.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
               </p>
-              <p className="text-[10px] text-gray-400 mt-1 font-semibold">
+              <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-1 font-semibold">
                 {customer.totalUtang > 0 ? 'Outstanding Receivable' : 'Zero Balance / Fully Settled'}
               </p>
             </div>
 
-            <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Total Credits Taken</p>
-              <p className="text-2xl font-black text-gray-800">
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
+              <p className="text-[10px] font-black text-gray-600 dark:text-gray-300 uppercase tracking-widest mb-0.5">Total Credits Taken</p>
+              <p className="text-2xl font-black text-gray-900 dark:text-white">
                 ₱{crossMatchResult.summary.totalCredits.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
               </p>
-              <p className="text-[10px] text-gray-400 mt-1 font-semibold">
+              <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-1 font-semibold">
                 {crossMatchResult.credits.length} total credit records
               </p>
             </div>
 
-            <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Total Payments Made</p>
-              <p className="text-2xl font-black text-green-600">
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
+              <p className="text-[10px] font-black text-gray-600 dark:text-gray-300 uppercase tracking-widest mb-0.5">Total Payments Made</p>
+              <p className="text-2xl font-black text-green-600 dark:text-emerald-400">
                 ₱{crossMatchResult.summary.totalPayments.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
               </p>
-              <p className="text-[10px] text-gray-400 mt-1 font-semibold">
+              <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-1 font-semibold">
                 {crossMatchResult.payments.length} payment records
               </p>
             </div>
 
-            <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Credit Status</p>
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
+              <p className="text-[10px] font-black text-gray-600 dark:text-gray-300 uppercase tracking-widest mb-0.5">Credit Status</p>
               <div className="flex items-center gap-1.5 mt-1">
-                <span className="text-xs font-black text-green-700 bg-green-50 px-2 py-0.5 rounded-lg border border-green-200">
+                <span className="text-xs font-black text-green-800 dark:text-emerald-300 bg-green-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-lg border border-green-200 dark:border-emerald-800">
                   {crossMatchResult.summary.totalSettledCredits} Settled
                 </span>
-                <span className="text-xs font-black text-red-700 bg-red-50 px-2 py-0.5 rounded-lg border border-red-200">
+                <span className="text-xs font-black text-red-800 dark:text-rose-300 bg-red-50 dark:bg-rose-950/60 px-2 py-0.5 rounded-lg border border-red-200 dark:border-rose-800">
                   {crossMatchResult.summary.totalUnpaidCredits + crossMatchResult.summary.totalPartialCredits} Open
                 </span>
               </div>
-              <p className="text-[10px] text-gray-400 mt-1 font-semibold">
+              <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-1 font-semibold">
                 Cross-Match Verification
               </p>
             </div>
@@ -199,64 +201,68 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
         </div>
 
         {/* Tabs & Search Navigation */}
-        <div className="px-6 pt-4 pb-3 border-b border-gray-100 bg-white flex flex-col md:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-1.5 p-1 bg-gray-100/80 rounded-2xl w-full md:w-auto overflow-x-auto">
+        <div className="px-6 pt-4 pb-3 border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 flex flex-col md:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-1.5 p-1 bg-gray-100/80 dark:bg-gray-800 rounded-2xl w-full md:w-auto overflow-x-auto">
             <button
+              type="button"
               onClick={() => setActiveTab('cross_match')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'cross_match'
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-900'
+                  ? 'bg-white dark:bg-gray-700 text-gray-950 dark:text-white shadow-sm'
+                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-950 dark:hover:text-white'
               }`}
             >
-              <Layers className="w-3.5 h-3.5 text-blue-600" />
+              <Layers className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
               Cross-Match Ledger
-              <span className="ml-1 px-1.5 py-0.2 text-[10px] rounded-full bg-blue-100 text-blue-700">
+              <span className="ml-1 px-1.5 py-0.2 text-[10px] rounded-full bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 font-bold">
                 {crossMatchResult.credits.length}
               </span>
             </button>
 
             <button
+              type="button"
               onClick={() => setActiveTab('unpaid')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'unpaid'
-                  ? 'bg-white text-red-600 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-900'
+                  ? 'bg-white dark:bg-gray-700 text-red-600 dark:text-rose-400 shadow-sm'
+                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-950 dark:hover:text-white'
               }`}
             >
-              <AlertCircle className="w-3.5 h-3.5 text-red-600" />
+              <AlertCircle className="w-3.5 h-3.5 text-red-600 dark:text-rose-400" />
               Outstanding Balances
               {unpaidCredits.length > 0 && (
-                <span className="ml-1 px-1.5 py-0.2 text-[10px] rounded-full bg-red-100 text-red-700">
+                <span className="ml-1 px-1.5 py-0.2 text-[10px] rounded-full bg-red-100 dark:bg-rose-950 text-red-700 dark:text-rose-300 font-bold">
                   {unpaidCredits.length}
                 </span>
               )}
             </button>
 
             <button
+              type="button"
               onClick={() => setActiveTab('payments')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'payments'
-                  ? 'bg-white text-green-700 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-900'
+                  ? 'bg-white dark:bg-gray-700 text-green-700 dark:text-emerald-400 shadow-sm'
+                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-950 dark:hover:text-white'
               }`}
             >
-              <ArrowDownLeft className="w-3.5 h-3.5 text-green-600" />
+              <ArrowDownLeft className="w-3.5 h-3.5 text-green-600 dark:text-emerald-400" />
               Payments & Breakdown
-              <span className="ml-1 px-1.5 py-0.2 text-[10px] rounded-full bg-green-100 text-green-700">
+              <span className="ml-1 px-1.5 py-0.2 text-[10px] rounded-full bg-green-100 dark:bg-emerald-950 text-green-700 dark:text-emerald-300 font-bold">
                 {crossMatchResult.payments.length}
               </span>
             </button>
 
             <button
+              type="button"
               onClick={() => setActiveTab('all')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'all'
-                  ? 'bg-white text-gray-900 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-900'
+                  ? 'bg-white dark:bg-gray-700 text-gray-950 dark:text-white shadow-sm'
+                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-950 dark:hover:text-white'
               }`}
             >
-              <History className="w-3.5 h-3.5 text-gray-600" />
+              <History className="w-3.5 h-3.5 text-gray-600 dark:text-gray-400" />
               Timeline
             </button>
           </div>
@@ -268,7 +274,7 @@ export function CreditHistory({ customer, getHistory, onClose }: CreditHistoryPr
               placeholder="Search by date or item..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 bg-gray-50 rounded-xl text-xs border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-gray-400"
+              className="w-full pl-9 pr-3 py-2 bg-gray-50 dark:bg-gray-800 text-gray-950 dark:text-white rounded-xl text-xs border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500"
             />
           </div>
         </div>

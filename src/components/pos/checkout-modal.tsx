@@ -447,7 +447,7 @@ export function CheckoutModal({
 
           {/* Payment Method Tabs */}
           <div>
-            <label className="text-xs font-black uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3 block">
+            <label className="text-xs font-black uppercase tracking-wider text-gray-800 dark:text-gray-200 mb-3 block">
               Select Mode of Payment
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 sm:gap-3">
@@ -458,10 +458,10 @@ export function CheckoutModal({
                 className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center justify-center gap-2 text-center cursor-pointer active:scale-95 ${
                   selectedMethod === 'cash'
                     ? 'border-orange-600 bg-orange-50/70 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400 shadow-sm ring-2 ring-orange-500/20'
-                    : 'border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-800/40 text-gray-700 dark:text-gray-300 hover:border-gray-200 dark:hover:border-gray-700'
+                    : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-850 text-gray-800 dark:text-gray-200 hover:border-gray-300 dark:hover:border-gray-700'
                 }`}
               >
-                <div className={`p-2.5 rounded-xl ${selectedMethod === 'cash' ? 'bg-orange-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-500'}`}>
+                <div className={`p-2.5 rounded-xl ${selectedMethod === 'cash' ? 'bg-orange-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'}`}>
                   <Banknote className="w-5 h-5" />
                 </div>
                 <span className="font-black text-xs uppercase tracking-tight">Cash</span>
@@ -474,10 +474,10 @@ export function CheckoutModal({
                 className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center justify-center gap-2 text-center cursor-pointer active:scale-95 ${
                   selectedMethod === 'gcash'
                     ? 'border-blue-600 bg-blue-50/70 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 shadow-sm ring-2 ring-blue-500/20'
-                    : 'border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-800/40 text-gray-700 dark:text-gray-300 hover:border-gray-200 dark:hover:border-gray-700'
+                    : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-850 text-gray-800 dark:text-gray-200 hover:border-gray-300 dark:hover:border-gray-700'
                 }`}
               >
-                <div className={`p-2.5 rounded-xl ${selectedMethod === 'gcash' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-500'}`}>
+                <div className={`p-2.5 rounded-xl ${selectedMethod === 'gcash' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'}`}>
                   <Smartphone className="w-5 h-5" />
                 </div>
                 <span className="font-black text-xs uppercase tracking-tight">GCash</span>
@@ -490,10 +490,10 @@ export function CheckoutModal({
                 className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center justify-center gap-2 text-center cursor-pointer active:scale-95 ${
                   selectedMethod === 'bank_transfer'
                     ? 'border-indigo-600 bg-indigo-50/70 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 shadow-sm ring-2 ring-indigo-500/20'
-                    : 'border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-800/40 text-gray-700 dark:text-gray-300 hover:border-gray-200 dark:hover:border-gray-700'
+                    : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-850 text-gray-800 dark:text-gray-200 hover:border-gray-300 dark:hover:border-gray-700'
                 }`}
               >
-                <div className={`p-2.5 rounded-xl ${selectedMethod === 'bank_transfer' ? 'bg-indigo-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-500'}`}>
+                <div className={`p-2.5 rounded-xl ${selectedMethod === 'bank_transfer' ? 'bg-indigo-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'}`}>
                   <Building2 className="w-5 h-5" />
                 </div>
                 <span className="font-black text-xs uppercase tracking-tight">Bank</span>
@@ -506,10 +506,10 @@ export function CheckoutModal({
                 className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center justify-center gap-2 text-center cursor-pointer active:scale-95 ${
                   selectedMethod === 'credit'
                     ? 'border-purple-600 bg-purple-50/70 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 shadow-sm ring-2 ring-purple-500/20'
-                    : 'border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-800/40 text-gray-700 dark:text-gray-300 hover:border-gray-200 dark:hover:border-gray-700'
+                    : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-850 text-gray-800 dark:text-gray-200 hover:border-gray-300 dark:hover:border-gray-700'
                 }`}
               >
-                <div className={`p-2.5 rounded-xl ${selectedMethod === 'credit' ? 'bg-purple-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-500'}`}>
+                <div className={`p-2.5 rounded-xl ${selectedMethod === 'credit' ? 'bg-purple-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'}`}>
                   <BookUser className="w-5 h-5" />
                 </div>
                 <span className="font-black text-xs uppercase tracking-tight">Credit (Utang)</span>
@@ -522,10 +522,10 @@ export function CheckoutModal({
                 className={`col-span-2 sm:col-span-1 p-4 rounded-2xl border-2 transition-all flex flex-col items-center justify-center gap-2 text-center cursor-pointer active:scale-95 ${
                   selectedMethod === 'split'
                     ? 'border-emerald-600 bg-emerald-50/70 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 shadow-sm ring-2 ring-emerald-500/20'
-                    : 'border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-800/40 text-gray-700 dark:text-gray-300 hover:border-gray-200 dark:hover:border-gray-700'
+                    : 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-850 text-gray-800 dark:text-gray-200 hover:border-gray-300 dark:hover:border-gray-700'
                 }`}
               >
-                <div className={`p-2.5 rounded-xl ${selectedMethod === 'split' ? 'bg-emerald-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-500'}`}>
+                <div className={`p-2.5 rounded-xl ${selectedMethod === 'split' ? 'bg-emerald-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'}`}>
                   <Layers className="w-5 h-5" />
                 </div>
                 <span className="font-black text-xs uppercase tracking-tight">Split Payment</span>
@@ -534,22 +534,22 @@ export function CheckoutModal({
           </div>
 
           {/* Payment Specific Controls */}
-          <div className="bg-gray-50/70 dark:bg-gray-800/30 rounded-[2rem] p-6 border border-gray-100 dark:border-gray-800">
+          <div className="bg-gray-50/70 dark:bg-gray-800/40 rounded-[2rem] p-6 border border-gray-200 dark:border-gray-800">
             {/* CASH VIEW */}
             {selectedMethod === 'cash' && (
               <div className="space-y-6">
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <label className="text-xs font-black uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                    <label className="text-xs font-black uppercase tracking-wider text-gray-800 dark:text-gray-200">
                       Amount Tendered (₱)
                     </label>
-                    <span className="text-xs font-bold text-gray-400">
+                    <span className="text-xs font-black text-gray-600 dark:text-gray-300">
                       Minimum ₱{total.toFixed(2)}
                     </span>
                   </div>
 
                   <div className="relative">
-                    <span className="absolute left-6 top-1/2 -translate-y-1/2 text-2xl font-black text-gray-400">
+                    <span className="absolute left-6 top-1/2 -translate-y-1/2 text-2xl font-black text-gray-600 dark:text-gray-300">
                       ₱
                     </span>
                     <input
@@ -559,14 +559,14 @@ export function CheckoutModal({
                       value={cashInputString}
                       onChange={(e) => handleCashChange(e.target.value)}
                       placeholder="0.00"
-                      className="w-full bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:border-orange-500 dark:focus:border-orange-500 rounded-2xl pl-14 pr-6 py-4 font-black text-2xl sm:text-3xl text-gray-900 dark:text-white outline-none transition-all shadow-xs"
+                      className="w-full bg-white dark:bg-gray-900 border-2 border-gray-200 dark:border-gray-700 focus:border-orange-500 dark:focus:border-orange-500 rounded-2xl pl-14 pr-6 py-4 font-black text-2xl sm:text-3xl text-gray-950 dark:text-white outline-none transition-all shadow-xs"
                     />
                   </div>
                 </div>
 
                 {/* Quick Bills buttons */}
                 <div>
-                  <label className="text-[11px] font-black uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-2 block">
+                  <label className="text-xs font-black uppercase tracking-wider text-gray-800 dark:text-gray-200 mb-2 block">
                     Quick Bill Presets
                   </label>
                   <div className="flex flex-wrap gap-2">
@@ -578,7 +578,7 @@ export function CheckoutModal({
                         className={`px-4 py-2.5 rounded-xl font-black text-xs uppercase transition-all cursor-pointer ${
                           cashTendered === bill
                             ? 'bg-orange-600 text-white shadow-md'
-                            : 'bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200'
+                            : 'bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200'
                         }`}
                       >
                         {bill === total ? 'Exact Amount' : `₱${bill.toLocaleString()}`}

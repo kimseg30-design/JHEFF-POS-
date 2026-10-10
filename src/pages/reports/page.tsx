@@ -140,31 +140,31 @@ export default function ReportsPage() {
               <div className="flex items-center gap-6">
                 <Link 
                   href="/"
-                  className="p-4 bg-white hover:bg-gray-50 rounded-[1.5rem] transition-all text-gray-400 hover:text-gray-900 border border-gray-100 shadow-sm"
+                  className="p-4 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-[1.5rem] transition-all text-gray-600 dark:text-gray-300 hover:text-gray-950 dark:hover:text-white border border-gray-200 dark:border-gray-800 shadow-sm"
                 >
                   <ArrowLeft className="w-6 h-6" />
                 </Link>
                 <div>
-                  <h2 className="text-4xl font-black text-gray-900 tracking-tighter leading-tight">Reports Dashboard</h2>
-                  <p className="text-lg text-gray-500 font-medium">Analyze your store performance, credit collections, and sales trends.</p>
+                  <h2 className="text-4xl font-black text-gray-950 dark:text-white tracking-tighter leading-tight">Reports Dashboard</h2>
+                  <p className="text-lg text-gray-600 dark:text-gray-300 font-bold">Analyze your store performance, credit collections, and sales trends.</p>
                   <div className="flex flex-wrap items-center gap-2 mt-4">
                     <Link 
                       href="/reports/daily"
-                      className="px-4 py-2 bg-white hover:bg-gray-100 border border-gray-200 rounded-xl text-xs font-bold text-gray-700 transition-all shadow-xs"
+                      className="px-4 py-2 bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-xs font-black text-gray-800 dark:text-gray-200 transition-all shadow-xs"
                     >
                       Daily Summary
                     </Link>
                     <Link 
                       href="/reports/sales-journal"
-                      className="px-4 py-2 bg-white hover:bg-gray-100 border border-gray-200 rounded-xl text-xs font-bold text-gray-700 transition-all shadow-xs"
+                      className="px-4 py-2 bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-xs font-black text-gray-800 dark:text-gray-200 transition-all shadow-xs"
                     >
                       Sales Journal
                     </Link>
                     <Link 
                       href="/reports/credits"
-                      className="px-4 py-2 bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-xl text-xs font-bold text-purple-700 transition-all shadow-xs flex items-center gap-1.5"
+                      className="px-4 py-2 bg-purple-50 dark:bg-purple-950/50 hover:bg-purple-100 dark:hover:bg-purple-900/50 border border-purple-200 dark:border-purple-800 rounded-xl text-xs font-black text-purple-800 dark:text-purple-300 transition-all shadow-xs flex items-center gap-1.5"
                     >
-                      <Users className="w-3.5 h-3.5 text-purple-600" />
+                      <Users className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
                       Credit & Utang Report
                     </Link>
                   </div>
@@ -173,24 +173,24 @@ export default function ReportsPage() {
   
               <div className="flex flex-wrap items-center gap-4">
                 {/* Branch Filter */}
-                <div className="flex items-center gap-3 bg-white p-2 rounded-[2rem] border border-gray-100 shadow-sm">
+                <div className="flex items-center gap-3 bg-white dark:bg-gray-900 p-2 rounded-[2rem] border border-gray-200 dark:border-gray-800 shadow-sm">
                   <div className="pl-4 pr-2">
-                    <Filter className="w-4 h-4 text-gray-400" />
+                    <Filter className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                   </div>
                   <select 
                     value={selectedBranchId}
                     onChange={(e) => setSelectedBranchId(e.target.value)}
-                    className="bg-transparent border-none outline-none text-xs font-black uppercase tracking-widest text-gray-900 pr-4 cursor-pointer"
+                    className="bg-transparent border-none outline-none text-xs font-black uppercase tracking-widest text-gray-950 dark:text-white pr-4 cursor-pointer"
                   >
-                    <option value="all">All Branches</option>
+                    <option value="all" className="dark:bg-gray-900">All Branches</option>
                     {branches.map(branch => (
-                      <option key={branch.id} value={branch.id}>{branch.name}</option>
+                      <option key={branch.id} value={branch.id} className="dark:bg-gray-900">{branch.name}</option>
                     ))}
                   </select>
                 </div>
   
                 {/* Time Range Filter */}
-                <div className="flex items-center gap-3 bg-white p-2 rounded-[2rem] border border-gray-100 shadow-sm">
+                <div className="flex items-center gap-3 bg-white dark:bg-gray-900 p-2 rounded-[2rem] border border-gray-200 dark:border-gray-800 shadow-sm">
                   {[
                     { label: '7D', value: 7 },
                     { label: '30D', value: 30 },
@@ -199,10 +199,10 @@ export default function ReportsPage() {
                     <button
                       key={range.value}
                       onClick={() => setTimeRange(range.value)}
-                      className={`px-6 py-2.5 rounded-[1.5rem] font-black text-xs uppercase tracking-widest transition-all ${
+                      className={`px-6 py-2.5 rounded-[1.5rem] font-black text-xs uppercase tracking-widest transition-all cursor-pointer ${
                         timeRange === range.value 
-                          ? 'bg-orange-600 text-white shadow-lg shadow-orange-200' 
-                          : 'text-gray-400 hover:bg-gray-50'
+                          ? 'bg-orange-600 text-white shadow-lg shadow-orange-500/20' 
+                          : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                       }`}
                     >
                       {range.label}

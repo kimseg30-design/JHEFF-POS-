@@ -323,43 +323,47 @@ export function Receipt({
       <motion.div 
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className="bg-white rounded-[2rem] w-full max-w-sm overflow-hidden flex flex-col shadow-2xl"
+        className="bg-white dark:bg-gray-900 rounded-[2rem] w-full max-w-sm overflow-hidden flex flex-col shadow-2xl border border-gray-100 dark:border-gray-800 transition-colors"
       >
         {/* Actions Header */}
-        <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+        <div className="p-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gray-50 dark:bg-gray-850">
           <div className="flex gap-2">
             <button 
+              type="button"
               onClick={handlePrint}
-              className="p-3 bg-white hover:bg-gray-100 rounded-xl text-gray-900 border border-gray-200 shadow-sm transition-all"
+              className="p-3 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl text-gray-950 dark:text-white border border-gray-200 dark:border-gray-700 shadow-xs transition-all cursor-pointer"
               title="Print Receipt"
             >
               <Printer className="w-5 h-5" />
             </button>
             <button 
+              type="button"
               onClick={handleDownloadPDF}
-              className="p-3 bg-white hover:bg-gray-100 rounded-xl text-gray-900 border border-gray-200 shadow-sm transition-all"
+              className="p-3 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl text-gray-950 dark:text-white border border-gray-200 dark:border-gray-700 shadow-xs transition-all cursor-pointer"
               title="Download PDF"
             >
               <Download className="w-5 h-5" />
             </button>
             <button 
+              type="button"
               onClick={handleShare}
-              className="p-3 bg-white hover:bg-gray-100 rounded-xl text-gray-900 border border-gray-200 shadow-sm transition-all"
+              className="p-3 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl text-gray-950 dark:text-white border border-gray-200 dark:border-gray-700 shadow-xs transition-all cursor-pointer"
               title="Share Receipt"
             >
               <Share2 className="w-5 h-5" />
             </button>
           </div>
           <button 
+            type="button"
             onClick={onClose}
-            className="p-3 bg-white hover:bg-gray-100 rounded-xl text-gray-400 border border-gray-200 shadow-sm transition-all"
+            className="p-3 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-gray-200 dark:border-gray-700 shadow-xs transition-all cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Receipt Content (Preview) */}
-        <div className="p-8 bg-gray-100 flex justify-center overflow-y-auto max-h-[70vh]">
+        <div className="p-8 bg-gray-100 dark:bg-gray-950 flex justify-center overflow-y-auto max-h-[70vh]">
           <div 
             id="printable-receipt"
             ref={receiptRef}
@@ -398,10 +402,11 @@ export function Receipt({
           </div>
         </div>
 
-        <div className="p-6 bg-white">
+        <div className="p-6 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800">
           <button 
+            type="button"
             onClick={onClose}
-            className="w-full bg-gray-900 text-white font-black py-4 rounded-2xl uppercase tracking-widest text-sm shadow-lg active:scale-95 transition-all"
+            className="w-full bg-orange-600 hover:bg-orange-700 text-white font-black py-4 rounded-2xl uppercase tracking-widest text-xs shadow-lg shadow-orange-500/20 active:scale-95 transition-all cursor-pointer"
           >
             Done
           </button>

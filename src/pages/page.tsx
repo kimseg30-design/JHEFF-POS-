@@ -266,10 +266,10 @@ export default function Home() {
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-50 dark:bg-blue-950/20 rounded-full -ml-32 -mb-32 opacity-50 blur-3xl pointer-events-none" />
   
             <div className="relative z-10">
-              <h2 className="text-4xl md:text-6xl font-black text-gray-900 dark:text-white mb-6 tracking-tighter leading-tight">
+              <h2 className="text-4xl md:text-6xl font-black text-gray-950 dark:text-white mb-6 tracking-tighter leading-tight">
                 Mabuhay, {store.name}!
               </h2>
-              <p className="text-xl text-gray-500 dark:text-gray-400 mb-16 font-medium max-w-2xl mx-auto">
+              <p className="text-xl text-gray-700 dark:text-gray-200 mb-16 font-bold max-w-2xl mx-auto">
                 Your store is open and ready for business. What would you like to do today?
               </p>
               
@@ -291,27 +291,27 @@ export default function Home() {
                         </div>
                         <div className="text-left">
                           <p className={`${item.textColor} font-black text-2xl tracking-tight mb-2`}>{item.title}</p>
-                          <p className={`${item.accentColor} font-medium text-sm`}>{item.description}</p>
+                          <p className={`${item.accentColor} font-bold text-sm`}>{item.description}</p>
                         </div>
                         
-                        <div className="mt-8 flex items-center gap-2 text-gray-900 font-black text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0">
+                        <div className="mt-8 flex items-center gap-2 text-gray-950 dark:text-white font-black text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0">
                           Open Menu <ArrowRight className="w-4 h-4" />
                         </div>
                       </Link>
                     ) : 'onClick' in item ? (
                       <button 
                         onClick={item.onClick}
-                        className={`group block w-full p-10 ${item.bg} rounded-[2.5rem] border border-transparent hover:border-white hover:shadow-2xl transition-all relative overflow-hidden h-full text-left`}
+                        className={`group block w-full p-10 ${item.bg} rounded-[2.5rem] border border-transparent hover:border-white hover:shadow-2xl transition-all relative overflow-hidden h-full text-left cursor-pointer`}
                       >
                         <div className={`${item.color} w-16 h-16 rounded-2xl flex items-center justify-center mb-8 text-white shadow-2xl ${item.shadow} group-hover:scale-110 transition-transform`}>
                           <item.icon className="w-8 h-8" />
                         </div>
                         <div>
                           <p className={`${item.textColor} font-black text-2xl tracking-tight mb-2`}>{item.title}</p>
-                          <p className={`${item.accentColor} font-medium text-sm`}>{item.description}</p>
+                          <p className={`${item.accentColor} font-bold text-sm`}>{item.description}</p>
                         </div>
                         
-                        <div className="mt-8 flex items-center gap-2 text-gray-900 font-black text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0">
+                        <div className="mt-8 flex items-center gap-2 text-gray-950 dark:text-white font-black text-xs uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0">
                           Open Settings <ArrowRight className="w-4 h-4" />
                         </div>
                       </button>
@@ -323,20 +323,20 @@ export default function Home() {
           </motion.div>
   
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-gray-900 rounded-[2.5rem] p-8 text-white flex items-center justify-between shadow-xl">
+            <div className="bg-gray-950 dark:bg-gray-900 border border-gray-800 rounded-[2.5rem] p-8 text-white flex items-center justify-between shadow-xl">
               <div>
-                <p className="text-gray-400 font-black text-[10px] uppercase tracking-widest mb-2">Quick Tip</p>
-                <h4 className="text-xl font-bold tracking-tight">Use &quot;Quick Add&quot; for items not in your inventory.</h4>
+                <p className="text-orange-400 font-black text-xs uppercase tracking-widest mb-2">Quick Tip</p>
+                <h4 className="text-xl font-black tracking-tight">Use &quot;Quick Add&quot; for items not in your inventory.</h4>
               </div>
               <div className="bg-white/10 p-4 rounded-2xl">
-                <ShoppingCart className="w-8 h-8 text-orange-500" />
+                <ShoppingCart className="w-8 h-8 text-orange-400" />
               </div>
             </div>
             
-            <div className="bg-white dark:bg-gray-900 rounded-[2.5rem] p-8 border border-gray-100 dark:border-gray-800 shadow-xl flex items-center justify-between transition-colors">
+            <div className="bg-white dark:bg-gray-900 rounded-[2.5rem] p-8 border border-gray-200 dark:border-gray-800 shadow-xl flex items-center justify-between transition-colors">
               <div>
-                <p className="text-gray-400 dark:text-gray-500 font-black text-[10px] uppercase tracking-widest mb-2">Offline Ready</p>
-                <h4 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">Your data is saved locally for offline use.</h4>
+                <p className="text-emerald-700 dark:text-emerald-400 font-black text-xs uppercase tracking-widest mb-2">Offline Ready</p>
+                <h4 className="text-xl font-black tracking-tight text-gray-950 dark:text-white">Your data is saved locally for offline use.</h4>
               </div>
               <div className="bg-green-50 dark:bg-emerald-950/50 p-4 rounded-2xl">
                 <Package className="w-8 h-8 text-green-600 dark:text-emerald-400" />

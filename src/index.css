@@ -29,10 +29,50 @@
     color: #f8fafc !important;
   }
 
-  /* Ensure inputs and placeholders have high contrast in dark mode */
+  /* High-contrast font visibility guarantees across entire app and window dialogs */
   .dark input::placeholder,
   .dark textarea::placeholder {
     color: #94a3b8;
+  }
+
+  /* Boost low-contrast text in dark mode */
+  .dark .text-gray-400 {
+    color: #cbd5e1;
+  }
+  .dark .text-gray-500 {
+    color: #e2e8f0;
+  }
+  .dark .text-gray-600 {
+    color: #f1f5f9;
+  }
+
+  /* Boost low-contrast text in light mode */
+  html:not(.dark) .text-gray-400 {
+    color: #475569;
+  }
+  html:not(.dark) .text-gray-500 {
+    color: #334155;
+  }
+
+  /* High contrast form inputs and selectors */
+  input, select, textarea {
+    color: #090d16;
+  }
+  .dark input, .dark select, .dark textarea {
+    color: #ffffff;
+  }
+
+  /* Window dialogs and modals font contrast protection */
+  .dark dialog,
+  .dark [role="dialog"],
+  .dark [aria-modal="true"] {
+    color: #f8fafc;
+  }
+
+  .dark dialog label,
+  .dark [role="dialog"] label,
+  .dark [aria-modal="true"] label {
+    color: #e2e8f0;
   }
 
   @media print {

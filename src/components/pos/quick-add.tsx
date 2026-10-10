@@ -73,21 +73,22 @@ export function QuickAdd({ onAdd }: QuickAddProps) {
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              className="relative w-full max-w-md bg-white rounded-[3rem] shadow-2xl overflow-hidden border border-gray-100"
+              className="relative w-full max-w-md bg-white dark:bg-gray-900 rounded-[3rem] shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-800 transition-colors"
             >
-              <div className="p-8 border-b border-gray-50 flex items-center justify-between bg-gray-50/50">
+              <div className="p-8 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gray-50/80 dark:bg-gray-800/60">
                 <div className="flex items-center gap-4">
-                  <div className="bg-orange-600 p-3 rounded-2xl text-white shadow-lg shadow-orange-100">
+                  <div className="bg-orange-600 p-3 rounded-2xl text-white shadow-lg shadow-orange-500/20">
                     <Zap className="w-6 h-6 fill-current" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-black text-gray-900 tracking-tight">Quick Add</h3>
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Instant item creation</p>
+                    <h3 className="text-2xl font-black text-gray-950 dark:text-white tracking-tight uppercase">Quick Add</h3>
+                    <p className="text-[10px] font-black text-gray-600 dark:text-gray-400 uppercase tracking-widest">Instant item creation</p>
                   </div>
                 </div>
                 <button 
+                  type="button"
                   onClick={() => setIsOpen(false)}
-                  className="p-3 bg-gray-100 rounded-2xl text-gray-500 hover:bg-gray-200 transition-colors"
+                  className="p-3 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-2xl text-gray-700 dark:text-gray-200 transition-colors cursor-pointer"
                 >
                   <X className="w-6 h-6" />
                 </button>
@@ -96,14 +97,14 @@ export function QuickAdd({ onAdd }: QuickAddProps) {
               <form onSubmit={handleSubmit} className="p-8 space-y-6">
                 <div className="space-y-4">
                   <div>
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block ml-1">Price Presets</label>
+                    <label className="text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-widest mb-2 block ml-1">Price Presets</label>
                     <div className="flex flex-wrap gap-2">
                       {pricePresets.map((preset) => (
                         <button
                           key={preset}
                           type="button"
                           onClick={() => handlePresetClick(preset)}
-                          className="flex-1 min-w-[60px] py-3 bg-orange-50 text-orange-600 rounded-xl font-black text-sm hover:bg-orange-100 transition-colors border border-orange-100"
+                          className="flex-1 min-w-[60px] py-3 bg-orange-50 dark:bg-orange-950/40 text-orange-800 dark:text-orange-300 rounded-xl font-black text-sm hover:bg-orange-100 dark:hover:bg-orange-900/40 transition-colors border border-orange-200 dark:border-orange-800 cursor-pointer"
                         >
                           ₱{preset}
                         </button>
@@ -112,20 +113,20 @@ export function QuickAdd({ onAdd }: QuickAddProps) {
                   </div>
 
                   <div>
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block ml-1">Item Name (Optional)</label>
+                    <label className="text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-widest mb-2 block ml-1">Item Name (Optional)</label>
                     <input
                       ref={nameInputRef}
                       type="text"
                       placeholder="e.g. Ice Candy"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full px-6 py-4 bg-gray-50 rounded-2xl border border-gray-100 focus:ring-4 focus:ring-orange-500/10 outline-none text-lg font-bold transition-all"
+                      className="w-full px-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-950 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 rounded-2xl border-2 border-gray-200 dark:border-gray-700 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-base font-bold transition-all"
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 block ml-1">Price (₱)</label>
+                    <label className="text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-widest mb-2 block ml-1">Price (₱)</label>
                     <div className="relative">
-                      <span className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 font-black text-xl">₱</span>
+                      <span className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-600 dark:text-gray-400 font-black text-xl">₱</span>
                       <input
                         type="number"
                         step="0.01"
@@ -133,7 +134,7 @@ export function QuickAdd({ onAdd }: QuickAddProps) {
                         placeholder="0.00"
                         value={price}
                         onChange={(e) => setPrice(e.target.value)}
-                        className="w-full pl-12 pr-6 py-4 bg-gray-50 rounded-2xl border border-gray-100 focus:ring-4 focus:ring-orange-500/10 outline-none text-xl font-black transition-all"
+                        className="w-full pl-12 pr-6 py-4 bg-gray-50 dark:bg-gray-800 text-gray-950 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 rounded-2xl border-2 border-gray-200 dark:border-gray-700 focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 outline-none text-xl font-black transition-all"
                       />
                     </div>
                   </div>
@@ -143,19 +144,19 @@ export function QuickAdd({ onAdd }: QuickAddProps) {
                   whileTap={{ scale: 0.95 }}
                   type="submit"
                   disabled={isSubmitting || !name || !price}
-                  className="w-full bg-orange-600 hover:bg-orange-700 disabled:bg-gray-300 text-white font-black py-6 rounded-[2rem] flex items-center justify-center gap-4 shadow-2xl shadow-orange-200 transition-all text-xl tracking-tight"
+                  className="w-full bg-orange-600 hover:bg-orange-700 disabled:bg-gray-200 dark:disabled:bg-gray-800 disabled:text-gray-400 text-white font-black py-5 rounded-[2rem] flex items-center justify-center gap-4 shadow-xl shadow-orange-500/20 transition-all text-lg tracking-tight cursor-pointer disabled:cursor-not-allowed uppercase"
                 >
                   {isSubmitting ? (
-                    <Loader2 className="w-8 h-8 animate-spin" />
+                    <Loader2 className="w-7 h-7 animate-spin" />
                   ) : (
                     <>
-                      <Plus className="w-8 h-8" />
+                      <Plus className="w-6 h-6" />
                       ADD TO CART
                     </>
                   )}
                 </motion.button>
                 
-                <p className="text-[10px] text-gray-400 font-black uppercase tracking-widest text-center">
+                <p className="text-[10px] text-gray-600 dark:text-gray-400 font-black uppercase tracking-widest text-center">
                   Automatically adds to inventory & cart
                 </p>
               </form>

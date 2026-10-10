@@ -514,21 +514,21 @@ export default function CreditReportPage() {
             <div className="flex items-center gap-4">
               <Link 
                 href="/reports"
-                className="p-3.5 bg-white hover:bg-gray-100 border border-gray-200 rounded-2xl transition-all text-gray-500 hover:text-gray-900 shadow-xs"
+                className="p-3.5 bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-800 rounded-2xl transition-all text-gray-600 dark:text-gray-300 hover:text-gray-950 dark:hover:text-white shadow-xs"
                 title="Back to Reports"
               >
                 <ArrowLeft className="w-5 h-5" />
               </Link>
               <div>
                 <div className="flex items-center gap-3">
-                  <h1 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">
+                  <h1 className="text-3xl sm:text-4xl font-black text-gray-950 dark:text-white tracking-tight">
                     Credit & Receivables Report
                   </h1>
-                  <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-black uppercase tracking-wider">
+                  <span className="px-3 py-1 bg-purple-100 dark:bg-purple-950/80 text-purple-900 dark:text-purple-300 rounded-full text-xs font-black uppercase tracking-wider border border-purple-200 dark:border-purple-800">
                     Accounts Receivable
                   </span>
                 </div>
-                <p className="text-gray-500 font-medium text-sm mt-1">
+                <p className="text-gray-600 dark:text-gray-300 font-bold text-sm mt-1">
                   Track outstanding balances, collection rates, debt aging, and customer settlement logs.
                 </p>
               </div>
@@ -537,21 +537,21 @@ export default function CreditReportPage() {
             <div className="flex flex-wrap items-center gap-3">
               <Link
                 href="/utang"
-                className="px-5 py-3 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 font-bold rounded-2xl text-xs uppercase tracking-wider flex items-center gap-2 shadow-xs transition-all active:scale-95"
+                className="px-5 py-3 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200 font-bold rounded-2xl text-xs uppercase tracking-wider flex items-center gap-2 shadow-xs transition-all active:scale-95"
               >
-                <Users className="w-4 h-4 text-green-600" />
+                <Users className="w-4 h-4 text-green-600 dark:text-green-400" />
                 Customer Ledger
               </Link>
               <button
                 onClick={handlePrintReport}
-                className="px-5 py-3 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 font-bold rounded-2xl text-xs uppercase tracking-wider flex items-center gap-2 shadow-xs transition-all active:scale-95"
+                className="px-5 py-3 bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200 font-bold rounded-2xl text-xs uppercase tracking-wider flex items-center gap-2 shadow-xs transition-all active:scale-95 cursor-pointer"
               >
-                <Printer className="w-4 h-4 text-gray-600" />
+                <Printer className="w-4 h-4 text-gray-600 dark:text-gray-300" />
                 Print Report
               </button>
               <button
                 onClick={handleExportSummaryCSV}
-                className="px-5 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-2xl text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-purple-200 transition-all active:scale-95"
+                className="px-5 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-2xl text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg shadow-purple-500/20 transition-all active:scale-95 cursor-pointer"
               >
                 <Download className="w-4 h-4" />
                 Export CSV
@@ -567,26 +567,26 @@ export default function CreditReportPage() {
           </div>
 
           {/* Filter Bar */}
-          <div className="bg-white p-4 sm:p-5 rounded-3xl border border-gray-100 shadow-sm flex flex-col gap-4 print:hidden">
+          <div className="bg-white dark:bg-gray-900 p-4 sm:p-5 rounded-3xl border border-gray-200 dark:border-gray-800 shadow-sm flex flex-col gap-4 print:hidden">
             <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
               <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
                 {/* Branch Selector */}
-                <div className="flex items-center gap-2 bg-gray-50 px-3.5 py-2 rounded-2xl border border-gray-200">
-                  <Filter className="w-3.5 h-3.5 text-gray-400" />
+                <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-800 px-3.5 py-2 rounded-2xl border border-gray-200 dark:border-gray-700">
+                  <Filter className="w-3.5 h-3.5 text-gray-500 dark:text-gray-400" />
                   <select
                     value={selectedBranchId}
                     onChange={(e) => setSelectedBranchId(e.target.value)}
-                    className="bg-transparent border-none outline-none text-xs font-bold text-gray-800 cursor-pointer"
+                    className="bg-transparent border-none outline-none text-xs font-bold text-gray-900 dark:text-white cursor-pointer"
                   >
-                    <option value="all">All Branches</option>
+                    <option value="all" className="dark:bg-gray-900">All Branches</option>
                     {branches.map(b => (
-                      <option key={b.id} value={b.id}>{b.name}</option>
+                      <option key={b.id} value={b.id} className="dark:bg-gray-900">{b.name}</option>
                     ))}
                   </select>
                 </div>
 
                 {/* Quick Date Presets Selector */}
-                <div className="flex items-center bg-gray-100 p-1 rounded-2xl overflow-x-auto">
+                <div className="flex items-center bg-gray-100 dark:bg-gray-800 p-1 rounded-2xl overflow-x-auto border border-transparent dark:border-gray-700">
                   {[
                     { label: 'Today', val: 'today' },
                     { label: '7 Days', val: '7' },
@@ -601,8 +601,8 @@ export default function CreditReportPage() {
                       onClick={() => setTimeRange(item.val as TimeRangeFilter)}
                       className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
                         timeRange === item.val
-                          ? 'bg-white text-gray-900 shadow-xs'
-                          : 'text-gray-500 hover:text-gray-900'
+                          ? 'bg-white dark:bg-gray-900 text-gray-950 dark:text-white shadow-xs'
+                          : 'text-gray-600 dark:text-gray-300 hover:text-gray-950 dark:hover:text-white'
                       }`}
                     >
                       {item.label}
@@ -613,54 +613,54 @@ export default function CreditReportPage() {
 
               {/* Search Input */}
               <div className="relative w-full lg:w-72">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 w-4 h-4" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search customer or item..."
-                  className="w-full pl-10 pr-4 py-2.5 bg-gray-50 rounded-2xl text-xs border border-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all placeholder:text-gray-400"
+                  className="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-gray-800 rounded-2xl text-xs font-bold text-gray-950 dark:text-white border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all placeholder:text-gray-500 dark:placeholder:text-gray-400"
                 />
               </div>
             </div>
 
             {/* Custom Date Range Picker Input Fields */}
             {timeRange === 'custom' && (
-              <div className="pt-2 border-t border-gray-100 flex flex-wrap items-center gap-3 text-xs bg-purple-50/50 p-3 rounded-2xl border border-purple-100">
-                <div className="flex items-center gap-1.5 text-purple-900 font-bold">
-                  <Calendar className="w-4 h-4 text-purple-600" />
+              <div className="pt-2 border-t border-gray-100 dark:border-gray-800 flex flex-wrap items-center gap-3 text-xs bg-purple-50/50 dark:bg-purple-950/30 p-3 rounded-2xl border border-purple-100 dark:border-purple-800">
+                <div className="flex items-center gap-1.5 text-purple-900 dark:text-purple-300 font-bold">
+                  <Calendar className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                   <span>Custom Date Range:</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-gray-500 font-medium">From:</span>
+                  <span className="text-gray-600 dark:text-gray-300 font-medium">From:</span>
                   <input
                     type="date"
                     value={customStartDate}
                     onChange={(e) => setCustomStartDate(e.target.value)}
-                    className="px-3 py-1.5 bg-white rounded-xl border border-purple-200 text-gray-800 font-bold outline-none focus:ring-2 focus:ring-purple-400"
+                    className="px-3 py-1.5 bg-white dark:bg-gray-800 rounded-xl border border-purple-200 dark:border-purple-700 text-gray-900 dark:text-white font-bold outline-none focus:ring-2 focus:ring-purple-400"
                   />
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-gray-500 font-medium">To:</span>
+                  <span className="text-gray-600 dark:text-gray-300 font-medium">To:</span>
                   <input
                     type="date"
                     value={customEndDate}
                     onChange={(e) => setCustomEndDate(e.target.value)}
-                    className="px-3 py-1.5 bg-white rounded-xl border border-purple-200 text-gray-800 font-bold outline-none focus:ring-2 focus:ring-purple-400"
+                    className="px-3 py-1.5 bg-white dark:bg-gray-800 rounded-xl border border-purple-200 dark:border-purple-700 text-gray-900 dark:text-white font-bold outline-none focus:ring-2 focus:ring-purple-400"
                   />
                 </div>
               </div>
             )}
 
             {/* Active Period Banner */}
-            <div className="flex items-center justify-between text-xs text-gray-500 bg-gray-50 px-3.5 py-2 rounded-xl">
+            <div className="flex items-center justify-between text-xs text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-800/60 px-3.5 py-2 rounded-xl border border-gray-100 dark:border-gray-800">
               <div className="flex items-center gap-2 font-medium">
-                <Calendar className="w-3.5 h-3.5 text-purple-600" />
+                <Calendar className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
                 <span>
                   <strong>Reporting Window:</strong> {activePeriodLabel}
                 </span>
               </div>
-              <div className="font-semibold text-gray-600">
+              <div className="font-semibold text-gray-800 dark:text-gray-200">
                 {periodActiveCustomersCount} customer{periodActiveCustomersCount === 1 ? '' : 's'} with activity in this period
               </div>
             </div>
@@ -668,127 +668,127 @@ export default function CreditReportPage() {
 
           {/* Primary KPI Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden">
+            <div className="bg-white dark:bg-gray-900 p-6 rounded-3xl border border-gray-200 dark:border-gray-800 shadow-sm relative overflow-hidden">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Total Outstanding</span>
-                <div className="p-2 bg-red-50 text-red-600 rounded-xl">
+                <span className="text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">Total Outstanding</span>
+                <div className="p-2 bg-red-100 dark:bg-rose-950/60 text-red-600 dark:text-rose-400 rounded-xl">
                   <AlertCircle className="w-4 h-4" />
                 </div>
               </div>
-              <p className="text-3xl font-black text-red-600">
+              <p className="text-3xl font-black text-red-600 dark:text-rose-400">
                 ₱{kpis.totalOutstanding.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
               </p>
-              <div className="flex items-center gap-1.5 text-xs text-gray-500 mt-2 font-medium">
-                <span className="font-bold text-red-700">{kpis.debtorsCount}</span> customers with balance
+              <div className="flex items-center gap-1.5 text-xs text-gray-700 dark:text-gray-300 mt-2 font-bold">
+                <span className="font-black text-red-700 dark:text-rose-400">{kpis.debtorsCount}</span> customers with balance
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden">
+            <div className="bg-white dark:bg-gray-900 p-6 rounded-3xl border border-gray-200 dark:border-gray-800 shadow-sm relative overflow-hidden">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Credits Issued (Period)</span>
-                <div className="p-2 bg-amber-50 text-amber-600 rounded-xl">
+                <span className="text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">Credits Issued (Period)</span>
+                <div className="p-2 bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 rounded-xl">
                   <ArrowUpRight className="w-4 h-4" />
                 </div>
               </div>
-              <p className="text-3xl font-black text-gray-900">
+              <p className="text-3xl font-black text-gray-950 dark:text-white">
                 ₱{kpis.periodCredits.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
               </p>
-              <div className="flex items-center gap-1.5 text-xs text-gray-500 mt-2 font-medium">
+              <div className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400 mt-2 font-bold">
                 <span>Total new credit recorded</span>
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden">
+            <div className="bg-white dark:bg-gray-900 p-6 rounded-3xl border border-gray-200 dark:border-gray-800 shadow-sm relative overflow-hidden">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Payments Collected</span>
-                <div className="p-2 bg-green-50 text-green-600 rounded-xl">
+                <span className="text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">Payments Collected</span>
+                <div className="p-2 bg-green-100 dark:bg-emerald-950/60 text-green-700 dark:text-emerald-400 rounded-xl">
                   <ArrowDownLeft className="w-4 h-4" />
                 </div>
               </div>
-              <p className="text-3xl font-black text-green-600">
+              <p className="text-3xl font-black text-green-600 dark:text-emerald-400">
                 ₱{kpis.periodPayments.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
               </p>
-              <div className="flex items-center gap-1.5 text-xs text-gray-500 mt-2 font-medium">
+              <div className="flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-400 mt-2 font-bold">
                 <span>Collections within selected period</span>
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden">
+            <div className="bg-white dark:bg-gray-900 p-6 rounded-3xl border border-gray-200 dark:border-gray-800 shadow-sm relative overflow-hidden">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Collection Ratio</span>
-                <div className="p-2 bg-purple-50 text-purple-600 rounded-xl">
+                <span className="text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">Collection Ratio</span>
+                <div className="p-2 bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-400 rounded-xl">
                   <PieChart className="w-4 h-4" />
                 </div>
               </div>
-              <p className="text-3xl font-black text-purple-700">
+              <p className="text-3xl font-black text-purple-700 dark:text-purple-300">
                 {kpis.collectionRate.toFixed(1)}%
               </p>
-              <div className="flex items-center gap-1.5 text-xs text-gray-500 mt-2 font-medium">
-                <span className="font-bold text-green-600">{kpis.settledCount}</span> settled customers
+              <div className="flex items-center gap-1.5 text-xs text-gray-700 dark:text-gray-300 mt-2 font-bold">
+                <span className="font-black text-green-600 dark:text-emerald-400">{kpis.settledCount}</span> settled customers
               </div>
             </div>
           </div>
 
           {/* Credit Aging Analysis Widget */}
-          <div className="bg-white p-6 sm:p-8 rounded-[2.5rem] border border-gray-100 shadow-sm space-y-4">
+          <div className="bg-white dark:bg-gray-900 p-6 sm:p-8 rounded-[2.5rem] border border-gray-200 dark:border-gray-800 shadow-sm space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h3 className="text-lg font-black text-gray-900 tracking-tight flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-indigo-600" />
+                <h3 className="text-lg font-black text-gray-950 dark:text-white tracking-tight flex items-center gap-2">
+                  <Clock className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                   Receivables Aging Analysis
                 </h3>
-                <p className="text-xs text-gray-500 font-medium">
+                <p className="text-xs text-gray-600 dark:text-gray-300 font-bold">
                   Breakdown of active unpaid balances by the length of time since credit was extended.
                 </p>
               </div>
-              <span className="text-xs font-bold text-gray-400">
+              <span className="text-xs font-black text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                 Aging Health
               </span>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2">
-              <div className="p-4 bg-emerald-50/70 border border-emerald-100 rounded-2xl">
-                <div className="flex items-center justify-between text-emerald-800 text-xs font-bold mb-1">
+              <div className="p-4 bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-2xl">
+                <div className="flex items-center justify-between text-emerald-900 dark:text-emerald-200 text-xs font-bold mb-1">
                   <span>0 - 7 Days (Current)</span>
-                  <span className="px-2 py-0.5 rounded-full bg-emerald-200 text-emerald-900 text-[10px]">Good</span>
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-200 dark:bg-emerald-900 text-emerald-950 dark:text-emerald-100 text-[10px] font-black">Good</span>
                 </div>
-                <p className="text-xl font-black text-emerald-700">
+                <p className="text-xl font-black text-emerald-700 dark:text-emerald-300">
                   ₱{kpis.aging.current.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
                 </p>
-                <p className="text-[11px] text-emerald-600/80 mt-0.5">Recently taken</p>
+                <p className="text-[11px] text-emerald-700 dark:text-emerald-400 mt-0.5 font-bold">Recently taken</p>
               </div>
 
-              <div className="p-4 bg-blue-50/70 border border-blue-100 rounded-2xl">
-                <div className="flex items-center justify-between text-blue-800 text-xs font-bold mb-1">
+              <div className="p-4 bg-blue-50/70 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-2xl">
+                <div className="flex items-center justify-between text-blue-900 dark:text-blue-200 text-xs font-bold mb-1">
                   <span>8 - 30 Days (Recent)</span>
-                  <span className="px-2 py-0.5 rounded-full bg-blue-200 text-blue-900 text-[10px]">Normal</span>
+                  <span className="px-2 py-0.5 rounded-full bg-blue-200 dark:bg-blue-900 text-blue-950 dark:text-blue-100 text-[10px] font-black">Normal</span>
                 </div>
-                <p className="text-xl font-black text-blue-700">
+                <p className="text-xl font-black text-blue-700 dark:text-blue-300">
                   ₱{kpis.aging.recent.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
                 </p>
-                <p className="text-[11px] text-blue-600/80 mt-0.5">Within payment term</p>
+                <p className="text-[11px] text-blue-700 dark:text-blue-400 mt-0.5 font-bold">Within payment term</p>
               </div>
 
-              <div className="p-4 bg-amber-50/70 border border-amber-100 rounded-2xl">
-                <div className="flex items-center justify-between text-amber-800 text-xs font-bold mb-1">
+              <div className="p-4 bg-amber-50/70 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-2xl">
+                <div className="flex items-center justify-between text-amber-900 dark:text-amber-200 text-xs font-bold mb-1">
                   <span>31 - 60 Days (Aging)</span>
-                  <span className="px-2 py-0.5 rounded-full bg-amber-200 text-amber-900 text-[10px]">Follow up</span>
+                  <span className="px-2 py-0.5 rounded-full bg-amber-200 dark:bg-amber-900 text-amber-950 dark:text-amber-100 text-[10px] font-black">Follow up</span>
                 </div>
-                <p className="text-xl font-black text-amber-700">
+                <p className="text-xl font-black text-amber-700 dark:text-amber-300">
                   ₱{kpis.aging.aging.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
                 </p>
-                <p className="text-[11px] text-amber-600/80 mt-0.5">Needs reminder</p>
+                <p className="text-[11px] text-amber-700 dark:text-amber-400 mt-0.5 font-bold">Needs reminder</p>
               </div>
 
-              <div className="p-4 bg-rose-50/70 border border-rose-100 rounded-2xl">
-                <div className="flex items-center justify-between text-rose-800 text-xs font-bold mb-1">
+              <div className="p-4 bg-rose-50/70 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 rounded-2xl">
+                <div className="flex items-center justify-between text-rose-900 dark:text-rose-200 text-xs font-bold mb-1">
                   <span>60+ Days (Overdue)</span>
-                  <span className="px-2 py-0.5 rounded-full bg-rose-200 text-rose-900 text-[10px]">Urgent</span>
+                  <span className="px-2 py-0.5 rounded-full bg-rose-200 dark:bg-rose-900 text-rose-950 dark:text-rose-100 text-[10px] font-black">Urgent</span>
                 </div>
-                <p className="text-xl font-black text-rose-700">
+                <p className="text-xl font-black text-rose-700 dark:text-rose-300">
                   ₱{kpis.aging.overdue.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
                 </p>
-                <p className="text-[11px] text-rose-600/80 mt-0.5">Critical collections</p>
+                <p className="text-[11px] text-rose-700 dark:text-rose-400 mt-0.5 font-bold">Critical collections</p>
               </div>
             </div>
           </div>

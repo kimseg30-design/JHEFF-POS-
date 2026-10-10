@@ -218,42 +218,42 @@ export default function SettingsPage() {
                       </div>
   
                       <div className="space-y-3">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 ml-4">Store Name</label>
+                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-700 dark:text-gray-300 ml-4">Store Name</label>
                         <div className="relative">
                           <input
                             type="text"
                             required
                             value={name}
                             onChange={(e) => setName(e.target.value)}
-                            className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-[2rem] px-8 py-5 font-bold text-gray-900 dark:text-white focus:ring-4 focus:ring-orange-100 dark:focus:ring-orange-900/30 transition-all outline-none text-lg"
+                            className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-[2rem] px-8 py-5 font-bold text-gray-950 dark:text-white focus:ring-4 focus:ring-orange-100 dark:focus:ring-orange-900/30 transition-all outline-none text-lg"
                             placeholder="Enter store name"
                           />
                         </div>
                       </div>
   
                       <div className="space-y-3">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 ml-4">Store Address</label>
+                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-700 dark:text-gray-300 ml-4">Store Address</label>
                         <div className="relative">
-                          <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-300 dark:text-gray-600 w-5 h-5" />
+                          <MapPin className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 w-5 h-5" />
                           <input
                             type="text"
                             value={address}
                             onChange={(e) => setAddress(e.target.value)}
-                            className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-[2rem] pl-14 pr-8 py-5 font-bold text-gray-900 dark:text-white focus:ring-4 focus:ring-orange-100 dark:focus:ring-orange-900/30 transition-all outline-none text-lg"
+                            className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-[2rem] pl-14 pr-8 py-5 font-bold text-gray-950 dark:text-white focus:ring-4 focus:ring-orange-100 dark:focus:ring-orange-900/30 transition-all outline-none text-lg"
                             placeholder="Enter store address"
                           />
                         </div>
                       </div>
   
                       <div className="space-y-3">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 ml-4">TIN (Tax Identification Number)</label>
+                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-700 dark:text-gray-300 ml-4">TIN (Tax Identification Number)</label>
                         <div className="relative">
-                          <Hash className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-300 dark:text-gray-600 w-5 h-5" />
+                          <Hash className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 w-5 h-5" />
                           <input
                             type="text"
                             value={tin}
                             onChange={(e) => setTin(e.target.value)}
-                            className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-[2rem] pl-14 pr-8 py-5 font-bold text-gray-900 dark:text-white focus:ring-4 focus:ring-orange-100 dark:focus:ring-orange-900/30 transition-all outline-none text-lg"
+                            className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-[2rem] pl-14 pr-8 py-5 font-bold text-gray-950 dark:text-white focus:ring-4 focus:ring-orange-100 dark:focus:ring-orange-900/30 transition-all outline-none text-lg"
                             placeholder="000-000-000-000"
                           />
                         </div>
@@ -266,7 +266,7 @@ export default function SettingsPage() {
                         <div className="bg-blue-100 dark:bg-blue-950/60 p-2 rounded-lg text-blue-600 dark:text-blue-400">
                           <Percent className="w-5 h-5" />
                         </div>
-                        <h3 className="font-black text-sm uppercase tracking-widest text-gray-900 dark:text-white">Tax Configuration</h3>
+                        <h3 className="font-black text-sm uppercase tracking-widest text-gray-950 dark:text-white">Tax Configuration</h3>
                       </div>
   
                       <div className="grid grid-cols-1 gap-4">
@@ -280,15 +280,15 @@ export default function SettingsPage() {
                           }`}
                         >
                           <div className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 ${
-                            taxType === 'NON-VAT' ? 'bg-orange-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-400'
+                            taxType === 'NON-VAT' ? 'bg-orange-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
                           }`}>
                             <X className="w-8 h-8" />
                           </div>
                           <div>
                             <p className={`font-black text-xl uppercase tracking-tighter ${
-                              taxType === 'NON-VAT' ? 'text-orange-900 dark:text-orange-300' : 'text-gray-400 dark:text-gray-500'
+                              taxType === 'NON-VAT' ? 'text-orange-900 dark:text-orange-300' : 'text-gray-800 dark:text-gray-200'
                             }`}>Non-VAT</p>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Standard for small businesses. No tax breakdown on receipts.</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-300 font-medium">Standard for small businesses. No tax breakdown on receipts.</p>
                           </div>
                         </button>
   
@@ -302,27 +302,27 @@ export default function SettingsPage() {
                           }`}
                         >
                           <div className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 ${
-                            taxType === 'VAT' ? 'bg-orange-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-400'
+                            taxType === 'VAT' ? 'bg-orange-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
                           }`}>
                             <Percent className="w-8 h-8" />
                           </div>
                           <div>
                             <p className={`font-black text-xl uppercase tracking-tighter ${
-                              taxType === 'VAT' ? 'text-orange-900 dark:text-orange-300' : 'text-gray-400 dark:text-gray-500'
+                              taxType === 'VAT' ? 'text-orange-900 dark:text-orange-300' : 'text-gray-800 dark:text-gray-200'
                             }`}>VAT (12%)</p>
-                            <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Value Added Tax. Shows detailed breakdown on all receipts.</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-300 font-medium">Value Added Tax. Shows detailed breakdown on all receipts.</p>
                           </div>
                         </button>
                       </div>
   
                       {taxType === 'VAT' && (
                         <div className="space-y-3 pt-4">
-                          <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 ml-4">VAT Rate (%)</label>
+                          <label className="text-[10px] font-black uppercase tracking-widest text-gray-700 dark:text-gray-300 ml-4">VAT Rate (%)</label>
                           <input
                             type="number"
                             value={vatRate}
                             onChange={(e) => setVatRate(Number(e.target.value))}
-                            className="w-full bg-gray-50 dark:bg-gray-800 border-none rounded-[2rem] px-8 py-5 font-bold text-gray-900 dark:text-white focus:ring-4 focus:ring-orange-100 dark:focus:ring-orange-900/30 transition-all outline-none text-lg"
+                            className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-[2rem] px-8 py-5 font-bold text-gray-950 dark:text-white focus:ring-4 focus:ring-orange-100 dark:focus:ring-orange-900/30 transition-all outline-none text-lg"
                             min="0"
                             max="100"
                           />

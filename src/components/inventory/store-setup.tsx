@@ -38,23 +38,23 @@ export function StoreSetup() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex items-center justify-center p-4 transition-colors">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-md w-full bg-white rounded-3xl shadow-xl shadow-gray-200/50 p-8 border border-gray-100"
+        className="max-w-md w-full bg-white dark:bg-gray-900 rounded-3xl shadow-xl shadow-gray-200/50 dark:shadow-none p-8 border border-gray-100 dark:border-gray-800 transition-colors"
       >
         <div className="flex flex-col items-center text-center mb-8">
-          <div className="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mb-4">
-            <Store className="w-8 h-8 text-orange-600" />
+          <div className="w-16 h-16 bg-orange-100 dark:bg-orange-950/60 rounded-2xl flex items-center justify-center mb-4 text-orange-600 dark:text-orange-400">
+            <Store className="w-8 h-8" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900">Setup Your Store</h2>
-          <p className="text-gray-500 mt-2">Welcome to Sari-Sari POS. Let&apos;s get your business started.</p>
+          <h2 className="text-2xl font-black text-gray-950 dark:text-white">Setup Your Store</h2>
+          <p className="text-gray-600 dark:text-gray-300 font-bold mt-2 text-sm">Welcome to Sari-Sari POS. Let&apos;s get your business started.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wider">
+            <label className="block text-xs font-black text-gray-700 dark:text-gray-300 mb-2 uppercase tracking-wider">
               Store Name
             </label>
             <input
@@ -62,23 +62,23 @@ export function StoreSetup() {
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Aling Nena&apos;s Store"
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all placeholder:text-gray-300"
+              placeholder="e.g. Aling Nena's Store"
+              className="w-full px-4 py-3.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-950 dark:text-white focus:ring-2 focus:ring-orange-500 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500 font-bold"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wider">
+            <label className="block text-xs font-black text-gray-700 dark:text-gray-300 mb-2 uppercase tracking-wider">
               Tax Configuration
             </label>
             <div className="grid grid-cols-2 gap-4">
               <button
                 type="button"
                 onClick={() => setTaxType('NON-VAT')}
-                className={`p-4 rounded-xl border-2 transition-all text-sm font-bold ${
+                className={`p-4 rounded-xl border-2 transition-all text-sm font-black cursor-pointer ${
                   taxType === 'NON-VAT' 
-                    ? 'border-orange-500 bg-orange-50 text-orange-700' 
-                    : 'border-gray-100 bg-gray-50 text-gray-400 hover:border-gray-200'
+                    ? 'border-orange-500 bg-orange-50 dark:bg-orange-950/60 text-orange-700 dark:text-orange-300' 
+                    : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:border-gray-300'
                 }`}
               >
                 NON-VAT
@@ -86,10 +86,10 @@ export function StoreSetup() {
               <button
                 type="button"
                 onClick={() => setTaxType('VAT')}
-                className={`p-4 rounded-xl border-2 transition-all text-sm font-bold ${
+                className={`p-4 rounded-xl border-2 transition-all text-sm font-black cursor-pointer ${
                   taxType === 'VAT' 
-                    ? 'border-orange-500 bg-orange-50 text-orange-700' 
-                    : 'border-gray-100 bg-gray-50 text-gray-400 hover:border-gray-200'
+                    ? 'border-orange-500 bg-orange-50 dark:bg-orange-950/60 text-orange-700 dark:text-orange-300' 
+                    : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:border-gray-300'
                 }`}
               >
                 VAT (12%)
@@ -100,7 +100,7 @@ export function StoreSetup() {
           <button
             type="submit"
             disabled={isSaving || !name}
-            className="w-full bg-orange-600 hover:bg-orange-700 disabled:bg-gray-300 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all group shadow-lg shadow-orange-200"
+            className="w-full bg-orange-600 hover:bg-orange-700 disabled:bg-gray-300 dark:disabled:bg-gray-800 text-white font-black py-4 rounded-xl flex items-center justify-center gap-2 transition-all group shadow-lg shadow-orange-500/20 cursor-pointer uppercase tracking-wider text-xs"
           >
             {isSaving ? (
               <Loader2 className="w-5 h-5 animate-spin" />
@@ -113,7 +113,7 @@ export function StoreSetup() {
           </button>
         </form>
 
-        <p className="text-center text-xs text-gray-400 mt-8 font-medium uppercase tracking-widest">
+        <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-8 font-black uppercase tracking-widest">
           Offline-First • Local Storage Enabled
         </p>
       </motion.div>
